@@ -15,24 +15,7 @@ namespace WholeSaleManagementApp.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.5");
-
-            modelBuilder.Entity("WholeSaleManagementApp.Data.Person", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Person");
-                });
+                .HasAnnotation("ProductVersion", "5.0.12");
 
             modelBuilder.Entity("WholeSaleManagementApp.Models.Contact.Contact", b =>
                 {

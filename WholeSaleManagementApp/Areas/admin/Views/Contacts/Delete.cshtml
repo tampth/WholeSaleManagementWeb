@@ -1,14 +1,15 @@
 ﻿@model WholeSaleManagementApp.Models.Contact.Contact
 
 @{
-    ViewData["Title"] = "Thông tin liên hệ";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Delete</h1>
 
+<h3>Are you sure you want to delete this?</h3>
 <div>
-    
+    <h4>Contact</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -36,8 +37,10 @@
             @Html.DisplayFor(model => model.Phone)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Chỉn sửa</a> |
-    <a asp-action="Index">Quay lại</a>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
 </div>

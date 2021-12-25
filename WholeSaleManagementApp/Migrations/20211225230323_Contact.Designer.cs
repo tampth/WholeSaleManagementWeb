@@ -9,7 +9,7 @@ using WholeSaleManagementApp.Data;
 namespace WholeSaleManagementApp.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20211223063720_Contact")]
+    [Migration("20211225230323_Contact")]
     partial class Contact
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,24 +17,7 @@ namespace WholeSaleManagementApp.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.5");
-
-            modelBuilder.Entity("WholeSaleManagementApp.Data.Person", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Person");
-                });
+                .HasAnnotation("ProductVersion", "5.0.12");
 
             modelBuilder.Entity("WholeSaleManagementApp.Models.Contact.Contact", b =>
                 {

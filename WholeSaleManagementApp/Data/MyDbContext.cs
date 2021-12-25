@@ -14,8 +14,6 @@ namespace WholeSaleManagementApp.Data
 
         }
 
-        public DbSet<Person> Person { get; set; }
-
         public DbSet<Contact> Contacts { get; set; }
     }
 }

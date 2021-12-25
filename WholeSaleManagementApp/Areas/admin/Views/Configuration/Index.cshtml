@@ -1,0 +1,47 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using System.Data
+
+
+@inject WholeSaleManagementApp.Data.MyDbContext dbContext
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+    var connect = dbContext.Database.GetDbConnection();
+    var dbname = connect.Database;
+    var can_connect = dbContext.Database.CanConnect();
+
+    dbContext.Database.GetPendingMigrations();
+}
+
+<partial name="_AlertMessage" />
+
+<h1>Migration</h1>
+@foreach (var migration in dbContext.Database.GetPendingMigrations())
+{
+    <p>@migration (pending)</p>
+}
+
+@if (!can_connect)
+{
+    <p class="alert alert-danger">Khong ket noi duoc</p>
+}
+
+@if (dbContext.Database.GetPendingMigrations().Any())
+{
+<form method="post">
+    <button class="btn btn-danger" asp-action="Migrate">Tao db</button>
+</form>
+}
+
+@if (can_connect)
+{
+    <h2>Cac table</h2>
+    await dbContext.Database.OpenConnectionAsync();
+    var table = dbContext.Database.GetDbConnection().GetSchema("Tables");
+    @foreach (System.Data.DataRow row in table.Rows)
+    {
+        <p>@row["TABLE_NAME"]</p>
+    }
+    <a class="btn btn-danger" asp-action="DeleteDb">Xoa database: @dbname</a>
+
+}
