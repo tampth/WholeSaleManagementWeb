@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,7 @@ using WholeSaleManagementApp.Models.Contact;
 namespace WholeSaleManagementApp.Areas.admin.Controllers
 {
     [Area("admin")]
+    [Authorize(Roles = RoleName.Administrator)]
     public class ContactsController : Controller
     {
         private readonly MyDbContext _context;

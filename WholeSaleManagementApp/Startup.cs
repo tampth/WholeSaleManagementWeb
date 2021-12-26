@@ -1,4 +1,5 @@
-﻿using App.Services;
+﻿using App.Data;
+using App.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -84,6 +85,15 @@ namespace WholeSaleManagementApp
             services.AddTransient<IEmailSender, SendMailService>(); // Đăng ký dịch vụ Mail
 
             services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ViewManageMenu", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.RequireRole(RoleName.Administrator);
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

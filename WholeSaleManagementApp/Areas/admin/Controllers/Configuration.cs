@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WholeSaleManagementApp.Data;
+using WholeSaleManagementApp.Models;
 
 namespace WholeSaleManagementApp.Areas.admin.Controllers
 {
@@ -13,9 +16,15 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
     {
         private readonly MyDbContext _dbContext;
 
-        public Configuration(MyDbContext dbContext)
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        private readonly UserManager<AppUser> _userManager;
+
+        public Configuration(MyDbContext dbContext, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _dbContext = dbContext;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -51,6 +60,37 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
             StatusMessage = "Cap nhat thanh cong";
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> SeedDataAsync()
+        {
+            var rolenames = typeof(RoleName).GetFields().ToList();
+            foreach (var r in rolenames)
+            {
+                var rolename = (string)r.GetRawConstantValue();
+                var rfound = await _roleManager.FindByNameAsync(rolename);
+                if (rfound == null)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(rolename));
+                }
+            }
+
+            var useradmin = await _userManager.FindByNameAsync("admin");
+            if (useradmin == null)
+            {
+                useradmin = new AppUser()
+                {
+                    UserName = "admin",
+                    Email = "admin@example.com",
+                    EmailConfirmed = true,
+                };
+
+                await _userManager.CreateAsync(useradmin, "admin123");
+                await _userManager.AddToRoleAsync(useradmin, RoleName.Administrator);
+            }
+
+            StatusMessage = "Vua seed Database";
+            return RedirectToAction("Index");
         }
     }
 }

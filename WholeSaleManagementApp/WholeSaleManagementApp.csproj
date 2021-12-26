@@ -22,4 +22,203 @@
     <Folder Include="Areas\admin\Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Areas\admin\Views\_ViewImports.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\admin\Views\_ViewStart.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\AccessDenied.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\AccessDenied.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ConfirmEmail.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\Error.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ErrorConfirmEmail.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ExternalLoginConfirmation.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ExternalLoginFailure.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ForgotPassword.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\Lockout.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\RegisterConfirmation.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ResetPassword.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\ResetPasswordConfirmation.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\SendCode.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\UseRecoveryCode.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\VerifyAuthenticatorCode.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Account\VerifyCode.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\AddPhoneNumber.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\ChangePassword.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\DisplayRecoveryCodes.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\EditProfile.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\Error.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\ManageLogins.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\SetPassword.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Manage\VerifyPhoneNumber.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Role\AddRoleClaim.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Role\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Role\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Role\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Role\EditRoleClaim.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\Role\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\User\AddClaim.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\User\AddRole.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\User\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\admin\Views\User\SetPassword.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ConfirmEmail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\Error.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ErrorConfirmEmail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ExternalLoginConfirmation.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ExternalLoginFailure.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ForgotPassword.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ForgotPasswordConfirmation.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\Lockout.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\Login.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\Register.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\RegisterConfirmation.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ResetPassword.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\ResetPasswordConfirmation.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\SendCode.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\UseRecoveryCode.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\VerifyAuthenticatorCode.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Account\VerifyCode.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\AddPhoneNumber.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\ChangePassword.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\DisplayRecoveryCodes.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\EditProfile.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\Error.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\ManageLogins.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\SetPassword.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Manage\VerifyPhoneNumber.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Role\AddRoleClaim.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Role\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Role\Delete.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Role\Edit.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Role\EditRoleClaim.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\Role\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\User\AddClaim.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\User\AddRole.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\User\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\admin\Views\User\SetPassword.cshtml" />
+  </ItemGroup>
+
 </Project>
