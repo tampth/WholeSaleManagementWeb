@@ -34,7 +34,7 @@ namespace WholeSaleManagementApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendContact([Bind("FullName,Email,Phone")] Contact contact)
+        public async Task<IActionResult> SendContact([Bind("FullName,Email,Phone,Message")] Contact contact)
         {
             if (ModelState.IsValid)
             {

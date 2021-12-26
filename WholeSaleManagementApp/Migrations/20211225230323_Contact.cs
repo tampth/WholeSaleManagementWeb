@@ -17,7 +17,8 @@ namespace WholeSaleManagementApp.Migrations
                     FullName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     DateSent = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Phone = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
+                    Phone = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
+                    Message = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                 },
                 constraints: table =>
                 {

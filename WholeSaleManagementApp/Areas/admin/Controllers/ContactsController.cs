@@ -55,7 +55,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FullName,Email,Phone")] Contact contact)
+        public async Task<IActionResult> Create([Bind("FullName,Email,Phone,Message")] Contact contact)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,Email,DateSent,Phone")] Contact contact)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,Email,DateSent,Phone,Message")] Contact contact)
         {
             if (id != contact.Id)
             {

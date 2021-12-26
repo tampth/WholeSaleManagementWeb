@@ -41,6 +41,11 @@ namespace WholeSaleManagementApp.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Contacts");
