@@ -28,9 +28,9 @@
 
 @if (dbContext.Database.GetPendingMigrations().Any())
 {
-<form method="post">
-    <button class="btn btn-danger" asp-action="Migrate">Tao db</button>
-</form>
+    <form method="post">
+        <button class="btn btn-danger" asp-action="Migrate">Tao db</button>
+    </form>
 }
 
 @if (can_connect)

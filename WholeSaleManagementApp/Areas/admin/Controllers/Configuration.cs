@@ -42,7 +42,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Migrate()
         {
