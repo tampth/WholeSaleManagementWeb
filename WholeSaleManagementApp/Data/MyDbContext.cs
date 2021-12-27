@@ -28,8 +28,15 @@ namespace WholeSaleManagementApp.Data
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
+
+            modelBuilder.Entity<CategoryBlog>(entity =>
+            {
+                entity.HasIndex(c => c.Slug);
+            });
         }
 
         public DbSet<Contact> Contacts { get; set; }
+
+        public DbSet<CategoryBlog> CategoryBlogs { get; set; }
     }
 }
