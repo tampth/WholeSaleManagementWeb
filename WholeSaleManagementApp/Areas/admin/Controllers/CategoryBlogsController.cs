@@ -186,16 +186,49 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 return NotFound();
             }
 
+            var canUpdate = true;
+
             if (categoryBlog.ParentCategoryId == categoryBlog.Id)
             {
                 ModelState.AddModelError(string.Empty, "Phai chon danh muc khac");
+                canUpdate = false;
             }    
 
-            if (ModelState.IsValid && categoryBlog.ParentCategoryId != categoryBlog.Id)
+            //Kiem tra thiet lap muc cha phu hop
+            if (canUpdate && categoryBlog.ParentCategoryId != null)
+            {
+                var childCates = (from c in _context.CategoryBlogs select c)
+                                .Include(c => c.CategoryChildren)
+                                .ToList()
+                                .Where(c => c.ParentCategoryId == categoryBlog.Id);
+                Func<List<CategoryBlog>, bool> checkCateIds = null;
+                checkCateIds = (cates) =>
+                        {
+                            foreach (var cate in cates)
+                            {
+                                Console.WriteLine(cate.Title);
+                                if (cate.Id == categoryBlog.ParentCategoryId)
+                                {
+                                    canUpdate = false;
+                                    ModelState.AddModelError(string.Empty, "Phai chon danh muc cha khac");
+                                    return true;
+                                }
+                                if (cate.CategoryChildren != null)
+                                    return checkCateIds(cate.CategoryChildren.ToList());
+                            }
+                            return false;
+                        };
+                checkCateIds(childCates.ToList());
+            }    
+
+            if (ModelState.IsValid && canUpdate)
             {
                 try
                 {
                     if (categoryBlog.ParentCategoryId == -1) categoryBlog.ParentCategoryId = null;
+
+                    var dtc = _context.CategoryBlogs.FirstOrDefault(c => c.Id == id);
+                    _context.Entry(dtc).State = EntityState.Detached;
 
                     _context.Update(categoryBlog);
                     await _context.SaveChangesAsync();

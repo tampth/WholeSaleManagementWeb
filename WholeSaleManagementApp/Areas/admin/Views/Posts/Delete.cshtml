@@ -1,0 +1,19 @@
+﻿@model WholeSaleManagementApp.Models.Blog.Post
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Xoa bai viet</h1>
+
+<h3>Co chac chan xoa</h3>
+<div>
+    <hr />
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="PostId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
