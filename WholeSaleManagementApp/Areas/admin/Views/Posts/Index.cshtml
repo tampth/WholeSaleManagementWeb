@@ -38,7 +38,7 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.PostId">@Html.DisplayFor(modelItem => item.Title)</a>
                     <br />
-                    <small>@string.Join(",", item.PostCategories.Select(pc => pc.Category.Title))</small>
+                    <small>@string.Join(", ", item.PostCategories.Select(pc => pc.Category.Title))</small>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Published)

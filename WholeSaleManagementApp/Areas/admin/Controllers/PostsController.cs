@@ -4,11 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using App.Data;
 using App.Models;
+using App.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WholeSaleManagementApp.Areas.admin.Models.Blog;
 using WholeSaleManagementApp.Data;
+using WholeSaleManagementApp.Models;
 using WholeSaleManagementApp.Models.Blog;
 
 namespace WholeSaleManagementApp.Areas.admin.Controllers
@@ -19,12 +23,14 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
     public class PostsController : Controller
     {
         private readonly MyDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
         [TempData]
         public string StatusMessage { get; set; }
-        public PostsController(MyDbContext context)
+        public PostsController(MyDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: admin/Posts
@@ -60,23 +66,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                         .Include(p => p.PostCategories)
                         .ThenInclude(pc => pc.Category)
                         .ToListAsync();
-            /*
-            model.totalUsers = await qr.CountAsync();
-            model.countPages = (int)Math.Ceiling((double)model.totalUsers / model.ITEMS_PER_PAGE);
-
-            if (model.currentPage < 1)
-                model.currentPage = 1;
-            if (model.currentPage > model.countPages)
-                model.currentPage = model.countPages;
-
-            var qr1 = qr.Skip((model.currentPage - 1) * model.ITEMS_PER_PAGE)
-                        .Take(model.ITEMS_PER_PAGE)
-                        .Select(u => new UserAndRole()
-                        {
-                            Id = u.Id,
-                            UserName = u.UserName,
-                        });
-            */
+            
 
             return View(postsInPage);
         }
@@ -101,9 +91,12 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         }
 
         // GET: admin/Posts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id");
+            var categories = await _context.CategoryBlogs.ToListAsync();
+
+            ViewData["categories"] = new MultiSelectList(categories, "Id", "Title");
+
             return View();
         }
 
@@ -112,15 +105,55 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,Title,Description,Slug,Content,Published,AuthorId,DateCreated,DateUpdated")] Post post)
+        public async Task<IActionResult> Create([Bind("Title,Description,Slug,Content,Published,CategoryIDs")] CreatePostModel post)
         {
+
+            var categories = await _context.CategoryBlogs.ToListAsync();
+
+            ViewData["categories"] = new MultiSelectList(categories, "Id", "Title");
+
+            if (post.Slug == null)
+            {
+                post.Slug = AppUtilities.GenerateSlug(post.Title);
+            }
+
+            if (await _context.Posts.AnyAsync(p => p.Slug == post.Slug))
+            {
+                ModelState.AddModelError("Slug", "Nhap chuoi Url khac");
+                return View(post);
+            };
+
+
+
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(this.User);
+
+                post.DateCreated = post.DateUpdated = DateTime.Now;
+                post.AuthorId = user.Id;
+
                 _context.Add(post);
+
+                if(post.CategoryIDs !=null)
+                {
+                    foreach (var CateId in post.CategoryIDs)
+                    {
+                        _context.Add(new PostCategory()
+                        {
+                            CategoryID = CateId,
+                            Post = post
+                        });
+                    }
+                }
+
                 await _context.SaveChangesAsync();
+
+                StatusMessage = "Vua tao bai viet moi";
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", post.AuthorId);
+
+
             return View(post);
         }
 
@@ -132,13 +165,27 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _context.Posts.Include(p => p.PostCategories).FirstOrDefaultAsync(p => p.PostId == id);
             if (post == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", post.AuthorId);
-            return View(post);
+
+            var postEdit = new CreatePostModel()
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Content = post.Content,
+                Description = post.Description,
+                Slug = post.Slug,
+                Published = post.Published,
+                CategoryIDs = post.PostCategories.Select(pc => pc.CategoryID).ToArray()
+            };
+
+            var categories = await _context.CategoryBlogs.ToListAsync();
+            ViewData["categories"] = new MultiSelectList(categories, "Id", "Title");
+
+            return View(postEdit);
         }
 
         // POST: admin/Posts/Edit/5
@@ -146,18 +193,70 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Description,Slug,Content,Published,AuthorId,DateCreated,DateUpdated")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Description,Slug,Content,Published,CategoryIDs")] CreatePostModel post)
         {
             if (id != post.PostId)
             {
                 return NotFound();
             }
 
+            var categories = await _context.CategoryBlogs.ToListAsync();
+            ViewData["categories"] = new MultiSelectList(categories, "Id", "Title");
+
+            if (post.Slug == null)
+            {
+                post.Slug = AppUtilities.GenerateSlug(post.Title);
+            };
+
+            if (await _context.Posts.AnyAsync(p => p.Slug == post.Slug && p.PostId != id))
+            {
+                ModelState.AddModelError("Slug", "Nhap chuoi Url khac");
+                return View(post);
+            };
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(post);
+
+                    var postUpdate = await _context.Posts.Include(p => p.PostCategories).FirstOrDefaultAsync(p => p.PostId == id);
+                    if (postUpdate == null)
+                    {
+                        return NotFound();
+                    }
+
+                    postUpdate.Title = post.Title;
+                    postUpdate.Description = post.Description;
+                    postUpdate.Content = post.Content;
+                    postUpdate.Published = post.Published;
+                    postUpdate.Slug = post.Slug;
+                    postUpdate.DateUpdated = DateTime.Now;
+
+                    //Update PostCategory
+                    if (post.CategoryIDs == null) post.CategoryIDs = new int[] { };
+
+                    var oldCateIds = postUpdate.PostCategories.Select(c => c.CategoryID).ToArray();
+                    var newCateIds = post.CategoryIDs;
+
+                    var removeCatePosts = from postCate in postUpdate.PostCategories
+                                          where (!newCateIds.Contains(postCate.CategoryID))
+                                          select postCate;
+                    _context.PostCategories.RemoveRange(removeCatePosts);
+
+                    var addCateIds = from CateId in newCateIds
+                                     where !oldCateIds.Contains(CateId)
+                                     select CateId;
+
+                    foreach (var CateId in addCateIds)
+                    {
+                        _context.PostCategories.Add(new PostCategory() {
+                            PostID = id,
+                            CategoryID = CateId
+                        });
+                    }
+
+
+                    _context.Update(postUpdate);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -171,9 +270,11 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                         throw;
                     }
                 }
+
+                StatusMessage = "Vua cap nhat bai viet";
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", post.AuthorId);
             return View(post);
         }
 
