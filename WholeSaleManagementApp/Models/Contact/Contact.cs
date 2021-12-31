@@ -14,13 +14,13 @@ namespace WholeSaleManagementApp.Models.Contact
 
         [StringLength(50)]
         [Required(ErrorMessage = "Vui lòng nhập {0}")]
-        [Display(Name = "Họ Tên")]
+        [Display(Name = "Contact Name")]
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập {0}")]
         [StringLength(100)]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
-        [Display(Name = "Địa chỉ Email")]
+        [Display(Name = "Email Address")]
         public string Email { get; set; }
 
         public DateTime DateSent { get; set; }
@@ -28,8 +28,13 @@ namespace WholeSaleManagementApp.Models.Contact
         [Required(ErrorMessage = "Vui lòng nhập {0}")]
         [StringLength(10)]
         [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
-        [Display(Name = "Số điện thoại")]
+        [Display(Name = "Phone")]
         public string Phone { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập {0}")]
+        [StringLength(100)]
+        [Display(Name = "Message")]
+        public string Message { get; set; }
 
     }
 }
