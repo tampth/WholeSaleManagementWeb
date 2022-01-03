@@ -7,7 +7,7 @@
 
 <h1>Danh sach bai viet</h1>
 
-<partial name="_AlertMessage"/>
+<partial name="_AlertMessage" />
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -35,10 +35,10 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.PostId">@Html.DisplayFor(modelItem => item.Title)</a>
-                    <br />
-                    <small>@string.Join(", ", item.PostCategories.Select(pc => pc.Category.Title))</small>
+                <td onclick="location.href = '@(Url.Action("Details", "Posts", new {id = item.PostId }))'">
+                        @Html.DisplayFor(modelItem => item.Title)
+                        <br />
+                        <small>@string.Join(", ", item.PostCategories.Select(pc => pc.Category.Title))</small>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Published)
@@ -50,15 +50,12 @@
                     @Html.DisplayFor(modelItem => item.DateUpdated)
                 </td>
                 <td>
-
-                    <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
 
 
 <partial name="_PagingXTL" model="@ViewBag.pagingmodel" />

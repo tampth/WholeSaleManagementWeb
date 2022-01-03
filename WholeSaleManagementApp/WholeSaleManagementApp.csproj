@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\admin\Views\Role\AddRoleClaim.cshtml" />
+    <Content Remove="Areas\admin\Views\Role\EditRoleClaim.cshtml" />
+    <Content Remove="Areas\admin\Views\User\AddClaim.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Uploads\1.jpg" />
   </ItemGroup>
 
