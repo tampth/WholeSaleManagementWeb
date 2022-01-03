@@ -6,28 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WholeSaleManagementApp.Data;
-using WholeSaleManagementApp.Models.Contact;
+using WholeSaleManagementApp.Models;
 
 namespace WholeSaleManagementApp.Areas.admin.Controllers
 {
     [Area("admin")]
-    public class ContactsController : Controller
+    public class AccountsController : Controller
     {
         private readonly MyDbContext _context;
 
-        public ContactsController(MyDbContext context)
+        public AccountsController(MyDbContext context)
         {
             _context = context;
         }
 
-        // GET: admin/Contacts
+        // GET: admin/Accounts
         public async Task<IActionResult> Index()
         {
-            var myDbContext = _context.Contacts.Include(c => c.Account);
-            return View(await myDbContext.ToListAsync());
+            return View(await _context.Accounts.ToListAsync());
         }
 
-        // GET: admin/Contacts/Details/5
+        // GET: admin/Accounts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,42 +34,39 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts
-                .Include(c => c.Account)
+            var account = await _context.Accounts
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (contact == null)
+            if (account == null)
             {
                 return NotFound();
             }
 
-            return View(contact);
+            return View(account);
         }
 
-        // GET: admin/Contacts/Create
+        // GET: admin/Accounts/Create
         public IActionResult Create()
         {
-            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name");
             return View();
         }
 
-        // POST: admin/Contacts/Create
+        // POST: admin/Accounts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FullName,AccountID,Email,DateSent,Phone,Message")] Contact contact)
+        public async Task<IActionResult> Create([Bind("Id,Name,Address")] Account account)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(contact);
+                _context.Add(account);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name", contact.AccountID);
-            return View(contact);
+            return View(account);
         }
 
-        // GET: admin/Contacts/Edit/5
+        // GET: admin/Accounts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,23 +74,22 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts.FindAsync(id);
-            if (contact == null)
+            var account = await _context.Accounts.FindAsync(id);
+            if (account == null)
             {
                 return NotFound();
             }
-            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name", contact.AccountID);
-            return View(contact);
+            return View(account);
         }
 
-        // POST: admin/Contacts/Edit/5
+        // POST: admin/Accounts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,AccountID,Email,DateSent,Phone,Message")] Contact contact)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address")] Account account)
         {
-            if (id != contact.Id)
+            if (id != account.Id)
             {
                 return NotFound();
             }
@@ -103,12 +98,12 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
             {
                 try
                 {
-                    _context.Update(contact);
+                    _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ContactExists(contact.Id))
+                    if (!AccountExists(account.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +114,10 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name", contact.AccountID);
-            return View(contact);
+            return View(account);
         }
 
-        // GET: admin/Contacts/Delete/5
+        // GET: admin/Accounts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,31 +125,30 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts
-                .Include(c => c.Account)
+            var account = await _context.Accounts
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (contact == null)
+            if (account == null)
             {
                 return NotFound();
             }
 
-            return View(contact);
+            return View(account);
         }
 
-        // POST: admin/Contacts/Delete/5
+        // POST: admin/Accounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contact = await _context.Contacts.FindAsync(id);
-            _context.Contacts.Remove(contact);
+            var account = await _context.Accounts.FindAsync(id);
+            _context.Accounts.Remove(account);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ContactExists(int id)
+        private bool AccountExists(int id)
         {
-            return _context.Contacts.Any(e => e.Id == id);
+            return _context.Accounts.Any(e => e.Id == id);
         }
     }
 }

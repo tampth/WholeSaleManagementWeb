@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WholeSaleManagementApp.Data;
 
 namespace WholeSaleManagementApp.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220103005806_AddAccount")]
+    partial class AddAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,38 +376,6 @@ namespace WholeSaleManagementApp.Migrations
                     b.ToTable("Contacts");
                 });
 
-            modelBuilder.Entity("WholeSaleManagementApp.Models.Deal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ActualCost")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<int?>("ContactId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("EstimateCost")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("SalespersonId")
-                        .HasColumnType("varchar(767)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("SalespersonId");
-
-                    b.ToTable("Deals");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -510,27 +480,6 @@ namespace WholeSaleManagementApp.Migrations
                         .HasForeignKey("AccountId");
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("WholeSaleManagementApp.Models.Deal", b =>
-                {
-                    b.HasOne("WholeSaleManagementApp.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId");
-
-                    b.HasOne("WholeSaleManagementApp.Models.Contact.Contact", "Contact")
-                        .WithMany()
-                        .HasForeignKey("ContactId");
-
-                    b.HasOne("WholeSaleManagementApp.Models.AppUser", "Salesperson")
-                        .WithMany()
-                        .HasForeignKey("SalespersonId");
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Contact");
-
-                    b.Navigation("Salesperson");
                 });
 
             modelBuilder.Entity("WholeSaleManagementApp.Models.Account", b =>

@@ -17,5 +17,7 @@ namespace WholeSaleManagementApp.Models
 
         [DataType(DataType.Date)]
         public DateTime? Birthday { set; get; }
+
+        public Account Account { get; set; }
     }
 }

@@ -56,5 +56,9 @@ namespace WholeSaleManagementApp.Data
         public DbSet<Post> Posts { get; set; }
 
         public DbSet<PostCategory> PostCategories { get; set; }
+
+        public DbSet<Account> Accounts { get; set; }
+
+        public DbSet<Deal>  Deals { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace WholeSaleManagementApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MyDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("Default")));
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -94,6 +95,14 @@ namespace WholeSaleManagementApp
                 {
                     builder.RequireAuthenticatedUser();
                     builder.RequireRole(RoleName.Administrator);
+                });
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SaleEmployee", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.RequireRole(RoleName.Sales);
                 });
             });
         }

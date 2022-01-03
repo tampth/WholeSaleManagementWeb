@@ -17,6 +17,9 @@ namespace WholeSaleManagementApp.Models.Contact
         [Display(Name = "Contact Name")]
         public string FullName { get; set; }
 
+        [Display(Name ="Công ty")]
+        public int? AccountID { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập {0}")]
         [StringLength(100)]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
@@ -35,6 +38,10 @@ namespace WholeSaleManagementApp.Models.Contact
         [StringLength(100)]
         [Display(Name = "Message")]
         public string Message { get; set; }
+
+        [ForeignKey("AccountID")]
+        [Display(Name = "Công ty")]
+        public Account Account { set; get; }
 
     }
 }

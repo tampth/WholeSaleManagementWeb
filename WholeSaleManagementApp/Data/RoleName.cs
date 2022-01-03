@@ -5,5 +5,6 @@ namespace App.Data
         public const string Administrator = "Administrator";
         public const string Editor = "Editor";
         public const string Member = "Member";
+        public const string Sales = "Sales";
     }
 }

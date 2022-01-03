@@ -36,6 +36,7 @@ namespace WholeSaleManagementApp.Models.Blog
         //[Required]
         [Display(Name = "Tác giả")]
         public string AuthorId { set; get; }
+
         [ForeignKey("AuthorId")]
         [Display(Name = "Tác giả")]
         public AppUser Author { set; get; }
