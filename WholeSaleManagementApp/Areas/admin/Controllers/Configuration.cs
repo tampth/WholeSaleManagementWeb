@@ -91,7 +91,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 await _userManager.AddToRoleAsync(useradmin, RoleName.Administrator);
             }
 
-            //SeedPostCategory();
+            SeedPostCategory();
 
             StatusMessage = "Vua seed Database";
             return RedirectToAction("Index");

@@ -14,6 +14,18 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.OwnerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Account)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stage)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.EstimateCost)
             </th>
             <th>
@@ -25,6 +37,18 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contact.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Account.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stage)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EstimateCost)
             </td>

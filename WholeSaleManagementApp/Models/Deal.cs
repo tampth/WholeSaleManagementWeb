@@ -6,16 +6,26 @@ using System.Threading.Tasks;
 
 namespace WholeSaleManagementApp.Models
 {
+    public enum Stage
+    {
+        A, B, C, D
+    }
     public class Deal
     {
         [Key]
         public int Id { get; set; }
+        public int AccountID { get; set; }
+        public int ContactID { get; set; }
+
+        public int OwnerID { get; set; }
 
         public Contact.Contact Contact { get; set; }
 
         public Account Account { get; set; }
 
-        public AppUser Salesperson { set; get; }
+        public AppUser Saleperson { get; set; }
+
+        public Stage? Stage { get; set; }
 
         public decimal EstimateCost { get; set; }
 

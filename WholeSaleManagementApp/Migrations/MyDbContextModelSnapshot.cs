@@ -341,7 +341,7 @@ namespace WholeSaleManagementApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int?>("AccountID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateSent")
@@ -358,7 +358,6 @@ namespace WholeSaleManagementApp.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -369,7 +368,7 @@ namespace WholeSaleManagementApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("AccountID");
 
                     b.ToTable("Contacts");
                 });
@@ -380,30 +379,116 @@ namespace WholeSaleManagementApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ActualCost")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int?>("ContactId")
+                    b.Property<int>("ContactID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("EstimateCost")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<string>("SalespersonId")
+                    b.Property<int>("OwnerID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SalepersonId")
+                        .HasColumnType("varchar(767)");
+
+                    b.Property<int?>("Stage")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountID");
+
+                    b.HasIndex("ContactID");
+
+                    b.HasIndex("SalepersonId");
+
+                    b.ToTable("Deals");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Orderline", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuotationId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("QuotationId");
+
+                    b.ToTable("Orderlines");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Quotation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("DealId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SalePersonId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SalePersonId1")
                         .HasColumnType("varchar(767)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("DealId");
 
-                    b.HasIndex("ContactId");
+                    b.HasIndex("SalePersonId1");
 
-                    b.HasIndex("SalespersonId");
-
-                    b.ToTable("Deals");
+                    b.ToTable("Quotations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -507,7 +592,7 @@ namespace WholeSaleManagementApp.Migrations
                 {
                     b.HasOne("WholeSaleManagementApp.Models.Account", "Account")
                         .WithMany("Contacts")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountID");
 
                     b.Navigation("Account");
                 });
@@ -515,27 +600,72 @@ namespace WholeSaleManagementApp.Migrations
             modelBuilder.Entity("WholeSaleManagementApp.Models.Deal", b =>
                 {
                     b.HasOne("WholeSaleManagementApp.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId");
+                        .WithMany("Deals")
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WholeSaleManagementApp.Models.Contact.Contact", "Contact")
-                        .WithMany()
-                        .HasForeignKey("ContactId");
+                        .WithMany("Deals")
+                        .HasForeignKey("ContactID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("WholeSaleManagementApp.Models.AppUser", "Salesperson")
-                        .WithMany()
-                        .HasForeignKey("SalespersonId");
+                    b.HasOne("WholeSaleManagementApp.Models.AppUser", "Saleperson")
+                        .WithMany("Deals")
+                        .HasForeignKey("SalepersonId");
 
                     b.Navigation("Account");
 
                     b.Navigation("Contact");
 
-                    b.Navigation("Salesperson");
+                    b.Navigation("Saleperson");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Orderline", b =>
+                {
+                    b.HasOne("WholeSaleManagementApp.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WholeSaleManagementApp.Models.Quotation", null)
+                        .WithMany("Orderlines")
+                        .HasForeignKey("QuotationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Quotation", b =>
+                {
+                    b.HasOne("WholeSaleManagementApp.Models.Deal", "Deal")
+                        .WithMany("Quotations")
+                        .HasForeignKey("DealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WholeSaleManagementApp.Models.AppUser", "SalePerson")
+                        .WithMany()
+                        .HasForeignKey("SalePersonId1");
+
+                    b.Navigation("Deal");
+
+                    b.Navigation("SalePerson");
                 });
 
             modelBuilder.Entity("WholeSaleManagementApp.Models.Account", b =>
                 {
                     b.Navigation("Contacts");
+
+                    b.Navigation("Deals");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.AppUser", b =>
+                {
+                    b.Navigation("Deals");
                 });
 
             modelBuilder.Entity("WholeSaleManagementApp.Models.Blog.Post", b =>
@@ -546,6 +676,21 @@ namespace WholeSaleManagementApp.Migrations
             modelBuilder.Entity("WholeSaleManagementApp.Models.CategoryBlog", b =>
                 {
                     b.Navigation("CategoryChildren");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Contact.Contact", b =>
+                {
+                    b.Navigation("Deals");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Deal", b =>
+                {
+                    b.Navigation("Quotations");
+                });
+
+            modelBuilder.Entity("WholeSaleManagementApp.Models.Quotation", b =>
+                {
+                    b.Navigation("Orderlines");
                 });
 #pragma warning restore 612, 618
         }

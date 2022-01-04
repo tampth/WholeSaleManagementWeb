@@ -34,7 +34,6 @@ namespace WholeSaleManagementApp.Models.Contact
         [Display(Name = "Phone")]
         public string Phone { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập {0}")]
         [StringLength(100)]
         [Display(Name = "Message")]
         public string Message { get; set; }
@@ -42,6 +41,8 @@ namespace WholeSaleManagementApp.Models.Contact
         [ForeignKey("AccountID")]
         [Display(Name = "Công ty")]
         public Account Account { set; get; }
+
+        public ICollection<Deal> Deals { get; set; }
 
     }
 }

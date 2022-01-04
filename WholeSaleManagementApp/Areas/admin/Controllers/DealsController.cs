@@ -23,7 +23,8 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // GET: admin/Deals
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Deals.ToListAsync());
+            var myDbContext = _context.Deals.Include(d => d.Account).Include(d => d.Contact);
+            return View(await myDbContext.ToListAsync());
         }
 
         // GET: admin/Deals/Details/5
@@ -35,6 +36,8 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
             }
 
             var deal = await _context.Deals
+                .Include(d => d.Account)
+                .Include(d => d.Contact)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (deal == null)
             {
@@ -47,6 +50,8 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // GET: admin/Deals/Create
         public IActionResult Create()
         {
+            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name");
+            ViewData["ContactID"] = new SelectList(_context.Contacts, "Id", "Email");
             return View();
         }
 
@@ -55,7 +60,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EstimateCost,ActualCost")] Deal deal)
+        public async Task<IActionResult> Create([Bind("Id,AccountID,ContactID,OwnerID,Stage,EstimateCost,ActualCost")] Deal deal)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +68,8 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name", deal.AccountID);
+            ViewData["ContactID"] = new SelectList(_context.Contacts, "Id", "Email", deal.ContactID);
             return View(deal);
         }
 
@@ -79,6 +86,8 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
             {
                 return NotFound();
             }
+            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name", deal.AccountID);
+            ViewData["ContactID"] = new SelectList(_context.Contacts, "Id", "Email", deal.ContactID);
             return View(deal);
         }
 
@@ -87,7 +96,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EstimateCost,ActualCost")] Deal deal)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountID,ContactID,OwnerID,Stage,EstimateCost,ActualCost")] Deal deal)
         {
             if (id != deal.Id)
             {
@@ -114,6 +123,8 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name", deal.AccountID);
+            ViewData["ContactID"] = new SelectList(_context.Contacts, "Id", "Email", deal.ContactID);
             return View(deal);
         }
 
@@ -126,6 +137,8 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
             }
 
             var deal = await _context.Deals
+                .Include(d => d.Account)
+                .Include(d => d.Contact)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (deal == null)
             {

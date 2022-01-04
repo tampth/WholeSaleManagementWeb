@@ -12,6 +12,7 @@
         <th>Tên user</th>
         <th>Vai trò (role)</th>
         <th>Tác vụ</th>
+        <th>Trạng thái</th>
     </tr>
     @foreach (var user in Model.users)
     {
@@ -29,6 +30,16 @@
             </td>
             <td>
                 <a class="btn btn-success btn-sm" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
+            </td>
+            <td>
+                @if (user.EmailConfirmed)
+                {
+                    <p class="btn btn-success btn-sm"> Đã xác thực</p>
+                }
+                else
+                {
+                    <p class="btn btn-danger btn-sm"> Chưa xác thực</p>
+                }
             </td>
         </tr>
     }

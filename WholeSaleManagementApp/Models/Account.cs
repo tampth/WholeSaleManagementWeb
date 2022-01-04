@@ -22,5 +22,7 @@ namespace WholeSaleManagementApp.Models
         public string Address { set; get; }
 
         public ICollection<Contact.Contact> Contacts { get; set; }
+
+        public ICollection<Deal> Deals { get; set; }
     }
 }
