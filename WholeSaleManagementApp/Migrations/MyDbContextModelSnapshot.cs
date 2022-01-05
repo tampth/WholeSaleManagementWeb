@@ -391,8 +391,8 @@ namespace WholeSaleManagementApp.Migrations
                     b.Property<decimal>("EstimateCost")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("OwnerID")
-                        .HasColumnType("int");
+                    b.Property<string>("OwnerID")
+                        .HasColumnType("text");
 
                     b.Property<string>("SalepersonId")
                         .HasColumnType("varchar(767)");

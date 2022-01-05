@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,12 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
     {
         private readonly MyDbContext _context;
 
-        public DealsController(MyDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+
+        public DealsController(MyDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: admin/Deals
@@ -50,8 +54,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // GET: admin/Deals/Create
         public IActionResult Create()
         {
-            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name");
-            ViewData["ContactID"] = new SelectList(_context.Contacts, "Id", "Email");
+            ViewData["ContactID"] = new SelectList(_context.Contacts, "Id", "FullName");
             return View();
         }
 
@@ -60,15 +63,22 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountID,ContactID,OwnerID,Stage,EstimateCost,ActualCost")] Deal deal)
+        public async Task<IActionResult> Create([Bind("Id,ContactID,EstimateCost")] Deal deal)
         {
             if (ModelState.IsValid)
             {
+
+                var user = await _userManager.GetUserAsync(this.User);
+                deal.OwnerID = user.Id;
+                deal.Stage = Stage.A;
+                deal.ActualCost = 0;
+                deal.AccountID = (int)_context.Contacts.Find(deal.ContactID).AccountID;
+
+
                 _context.Add(deal);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountID"] = new SelectList(_context.Accounts, "Id", "Name", deal.AccountID);
             ViewData["ContactID"] = new SelectList(_context.Contacts, "Id", "Email", deal.ContactID);
             return View(deal);
         }
@@ -107,6 +117,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
             {
                 try
                 {
+
                     _context.Update(deal);
                     await _context.SaveChangesAsync();
                 }

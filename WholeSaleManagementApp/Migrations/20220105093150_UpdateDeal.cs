@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 namespace WholeSaleManagementApp.Migrations
 {
-    public partial class Init : Migration
+    public partial class UpdateDeal : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,10 +45,25 @@ namespace WholeSaleManagementApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    Stock = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(256)", nullable: false),
+                    Id = table.Column<string>(type: "varchar(767)", nullable: false),
                     Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
@@ -86,7 +101,7 @@ namespace WholeSaleManagementApp.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(256)", nullable: false),
+                    Id = table.Column<string>(type: "varchar(767)", nullable: false),
                     FullName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     Address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
                     Birthday = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -123,7 +138,7 @@ namespace WholeSaleManagementApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(type: "varchar(256)", nullable: false),
+                    RoleId = table.Column<string>(type: "varchar(767)", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -146,8 +161,8 @@ namespace WholeSaleManagementApp.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     AccountID = table.Column<int>(type: "int", nullable: false),
                     ContactID = table.Column<int>(type: "int", nullable: false),
-                    OwnerID = table.Column<int>(type: "int", nullable: false),
-                    SalepersonId = table.Column<string>(type: "varchar(256)", nullable: true),
+                    OwnerID = table.Column<string>(type: "text", nullable: true),
+                    SalepersonId = table.Column<string>(type: "varchar(767)", nullable: true),
                     Stage = table.Column<int>(type: "int", nullable: true),
                     EstimateCost = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
                     ActualCost = table.Column<decimal>(type: "decimal(18, 2)", nullable: false)
@@ -186,7 +201,7 @@ namespace WholeSaleManagementApp.Migrations
                     Slug = table.Column<string>(type: "varchar(160)", maxLength: 160, nullable: true),
                     Content = table.Column<string>(type: "text", nullable: true),
                     Published = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AuthorId = table.Column<string>(type: "varchar(256)", nullable: true),
+                    AuthorId = table.Column<string>(type: "varchar(767)", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
@@ -207,7 +222,7 @@ namespace WholeSaleManagementApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(type: "varchar(256)", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(767)", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -226,10 +241,10 @@ namespace WholeSaleManagementApp.Migrations
                 name: "UserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "varchar(256)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "varchar(256)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "varchar(767)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "varchar(767)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<string>(type: "varchar(256)", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(767)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -246,8 +261,8 @@ namespace WholeSaleManagementApp.Migrations
                 name: "UserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "varchar(256)", nullable: false),
-                    RoleId = table.Column<string>(type: "varchar(256)", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(767)", nullable: false),
+                    RoleId = table.Column<string>(type: "varchar(767)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -270,9 +285,9 @@ namespace WholeSaleManagementApp.Migrations
                 name: "UserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "varchar(256)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "varchar(256)", nullable: false),
-                    Name = table.Column<string>(type: "varchar(256)", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(767)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "varchar(767)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(767)", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -296,7 +311,7 @@ namespace WholeSaleManagementApp.Migrations
                     SalePersonId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
-                    SalePersonId1 = table.Column<string>(type: "varchar(256)", nullable: true)
+                    SalePersonId1 = table.Column<string>(type: "varchar(767)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -339,6 +354,35 @@ namespace WholeSaleManagementApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Orderlines",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    QuotationId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(18, 2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orderlines", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orderlines_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orderlines_Quotations_QuotationId",
+                        column: x => x.QuotationId,
+                        principalTable: "Quotations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryBlog_ParentCategoryId",
                 table: "CategoryBlog",
@@ -369,6 +413,16 @@ namespace WholeSaleManagementApp.Migrations
                 name: "IX_Deals_SalepersonId",
                 table: "Deals",
                 column: "SalepersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orderlines_ProductId",
+                table: "Orderlines",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orderlines_QuotationId",
+                table: "Orderlines",
+                column: "QuotationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostCategory_CategoryID",
@@ -442,10 +496,10 @@ namespace WholeSaleManagementApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PostCategory");
+                name: "Orderlines");
 
             migrationBuilder.DropTable(
-                name: "Quotations");
+                name: "PostCategory");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
@@ -463,16 +517,22 @@ namespace WholeSaleManagementApp.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Quotations");
+
+            migrationBuilder.DropTable(
                 name: "CategoryBlog");
 
             migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "Deals");
+                name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Deals");
 
             migrationBuilder.DropTable(
                 name: "Contacts");

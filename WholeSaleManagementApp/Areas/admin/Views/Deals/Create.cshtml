@@ -12,34 +12,15 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="AccountID" class="control-label"></label>
-                <select asp-for="AccountID" class ="form-control" asp-items="ViewBag.AccountID"></select>
-            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ContactID" class="control-label"></label>
                 <select asp-for="ContactID" class ="form-control" asp-items="ViewBag.ContactID"></select>
             </div>
             <div class="form-group">
-                <label asp-for="OwnerID" class="control-label"></label>
-                <input asp-for="OwnerID" class="form-control" />
-                <span asp-validation-for="OwnerID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Stage" class="control-label"></label>
-                <input asp-for="Stage" class="form-control" />
-                <span asp-validation-for="Stage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="EstimateCost" class="control-label"></label>
                 <input asp-for="EstimateCost" class="form-control" />
                 <span asp-validation-for="EstimateCost" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ActualCost" class="control-label"></label>
-                <input asp-for="ActualCost" class="form-control" />
-                <span asp-validation-for="ActualCost" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -29,6 +29,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // GET: admin/Contacts
         public async Task<IActionResult> Index(string sortOrder, string searchString, [FromQuery(Name = "p")] int currentPage, int pagesize)
         {
+            Response.Headers.Add("Refresh", "5");
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = searchString;

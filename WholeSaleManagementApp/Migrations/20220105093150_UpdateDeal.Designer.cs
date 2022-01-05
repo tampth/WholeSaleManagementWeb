@@ -9,8 +9,8 @@ using WholeSaleManagementApp.Data;
 namespace WholeSaleManagementApp.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20220104122001_UpdateERD")]
-    partial class UpdateERD
+    [Migration("20220105093150_UpdateDeal")]
+    partial class UpdateDeal
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -393,8 +393,8 @@ namespace WholeSaleManagementApp.Migrations
                     b.Property<decimal>("EstimateCost")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("OwnerID")
-                        .HasColumnType("int");
+                    b.Property<string>("OwnerID")
+                        .HasColumnType("text");
 
                     b.Property<string>("SalepersonId")
                         .HasColumnType("varchar(767)");
