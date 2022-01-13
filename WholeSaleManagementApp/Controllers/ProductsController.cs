@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PagedList.Core;
 using System;
@@ -20,7 +21,9 @@ namespace WholeSalerWeb.Controllers
     {
         private readonly MyDbContext _context;
         private readonly IConfiguration _configuration;
-        // private readonly IEmailSender _sendMail;
+        private readonly IEmailSender _sendMail;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(MyDbContext context)
         {
@@ -179,7 +182,7 @@ namespace WholeSalerWeb.Controllers
         public IActionResult AddToCart(int productID)
         {
             // var product = _context.Products.Include(x => x.Cat).FirstOrDefault(x => x.ProductId == id);
-            productID = 1;
+            productID = 11;
 
             var sanpham = _context.Products
                 .Where(p => p.ProductId == productID)
@@ -370,6 +373,23 @@ namespace WholeSalerWeb.Controllers
         //    return RedirectToAction(nameof(Cart));
         //}
 
+        private async Task<AppUser> GetCurrentUser()
+        {
+            return await _userManager.GetUserAsync(HttpContext.User);
+        }
+
+        public async Task<IActionResult> CheckOutAsync([FromForm] string email, [FromForm] string address)
+        {
+            var user = await GetCurrentUser();
+
+            if (user == null)
+            {
+                return Redirect("/Admin/Account/Login");
+            }
+            var cart = GetCartItems();
+
+            return View(cart);
+        }
 
 
         [HttpPost]
@@ -416,15 +436,28 @@ namespace WholeSalerWeb.Controllers
                 hd.Address = diachi;
                 hd.Phone = sdt;
                 hd.OrderDate = DateTime.Now;
+                var user = await GetCurrentUser();
+                hd.UserId = user.Id;
 
                 foreach (var item in cart)
                 {
                     total += item.Product.Price * item.amount;
                 }
 
-                hd.Total = total;
+                long ship;
+                if (total > 500000)
+                {
+                    hd.Total = total;
+                     ship = 0;
+                }
+                else
+                {
+                    hd.Total = total + 20000;
+                    ship = 20000;
+                }
+                
 
-                hd.TransactStatusId = 0; // chờ xử lý
+                hd.TransactStatusId = 1; // chờ xử lý
 
                 _context.Orders.Add(hd);
                 _context.SaveChanges();
@@ -434,13 +467,15 @@ namespace WholeSalerWeb.Controllers
 
                 // gửi mail thử
                 string subject = "ĐƠN ĐẶT HÀNG";
-                string body = "TTOD xin gửi đến bạn thông tin đơn mua hàng" +
+                string body =  " <p> Xin chào" + hoten + " </p> " +
                                " <br></br> <div style=\" width: 700px; \">" +
+                               " <br></br> " +
+                               " <p> TTOD đã nhận được thông tin đặt hàng của bạn với mã đơn hàng: " + hd.OrderId + "</p>" +
+                               " <p> Vào ngày: " + hd.OrderDate + "</p>" +
                                " <div style =\"width: 95%; padding: 10px;\" > " +
-                               " <h4 style = \"text-align: center;\" > ĐƠN MUA HÀNG</h4>" +
-                               " <p> Ngày mua: " + hd.OrderDate + "</p>" +
-                               " <p> Họ tên: " + hoten + " </p> " +
-                               " <p> SĐT: " + sdt + "</p>" +
+                               " <h4 style = \"text-align: center;\" > THÔNG TIN ĐƠN HÀNG - DÀNH CHO NGƯỜI MUA </h4>" +
+                               " <p> Mã đơn hàng: " + hd.OrderId + " </p>" +
+                               " <p> Ngày đặt hàng: " + hd.OrderDate + "</p>" +
                                " <p> Địa chỉ nhận hàng:  " + diachi + "</p>" +
 
                                " <h4 style = \"text-align: center;\" > CHI TIẾT ĐƠN HÀNG </h4> " +
@@ -481,23 +516,23 @@ namespace WholeSalerWeb.Controllers
                    " <table style = \"text-align: center;  position:relative; left:70%; width:30%; border:1px solid black; border-collapse: collapse; \" > " +
                         " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
                         "     <th style = \" border:1px solid black; border-collapse: collapse;\" > Thành tiền </th> " +
-                         "    <th style = \" border:1px solid black;\" > " + hd.Total?.ToString("#,##0 VNĐ") + " </th>" +
+                         "    <th style = \" border:1px solid black;\" > " + total?.ToString("#,##0 VNĐ") + " </th>" +
                          " </tr> " +
                          " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
                           "   <th style = \" border:1px solid black; border-collapse: collapse; \" > Phí giao hàng </th> " +
-                           "  <th style = \" border:1px solid black; \" > 0 VNĐ</th> " +
+                           "  <th style = \" border:1px solid black; \" >" + ship.ToString("#,##0 VNĐ") + "</th> " +
                           " </tr> " +
                           " <tr style = \" border:1px solid black;border-collapse: collapse; background-color: #ff9100;color: white;line-height: 20px; \" > " +
                             "   <th style = \" border:1px solid black; border-collapse: collapse;\" > Tổng tiền </th> " +
                              "  <th style = \" border:1px solid black;\" >" + hd.Total?.ToString("#,##0 VNĐ") + " </th> " +
                           " </tr> " +
                    " </table> " +
-                   " <p> Cảm ơn quý khách đã mua sắm tại TTOD Trading CO., Limited, chúc quý khách một ngày vui vẻ! </p>" +
+                   " <p> Chúc bạn luôn có những trải nghiệm tuyệt vời khi mua sắm tại TTOD Trading C0., Limited! </p>" +
                    " </div> " +
                    " </div>";
 
 
-                // await _sendMail.SendEmailAsync(email, subject, body);
+                await _sendMail.SendEmailAsync(email, subject, body);
 
                 ClearCart();
                 RedirectToAction(nameof(Index));

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<WholeSaleManagementApp.Models.Product>
 @{
     ViewData["Title"] = "Thống kê";
-    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="content-header">
@@ -25,7 +25,7 @@
     <div class="card">
         <div class="card-header">
             <div>
-                <a id="printPDF" class="btn btn-primary" asp-action="InventoryReport">
+                <a id="printPDF" class="btn btn-primary">
                     <i class="ui-icon-circle-plus"></i>
                     <span>In</span>
                 </a>
@@ -54,7 +54,7 @@
                                 <th scope="col">SỐ LƯỢNG</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody>
                             @{int i = 0;}
                             @foreach (var item in Model)
@@ -68,7 +68,7 @@
                                 </tr>
                             }
                         </tbody>
-                        
+
                     </table>
                     <table class="table">
                         <tr style="text-align: center; background-color: #8EA9DB; color: #FFFFFF;">
@@ -85,6 +85,7 @@
     </div>
 </div>
 
+
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js"
             integrity="sha512-vDKWohFHe2vkVWXHp3tKvIxxXg0pJxeid5eo+UjdjME3DBFBn2F8yWOE0XmiFcFbXxrEOR1JriWEno5Ckpn15A=="
@@ -93,10 +94,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
             referrerpolicy="no-referrer"></script>
     <script>$("#printPDF").click(function () {
-            var element = document.getElementById('product-container');
-            html2pdf(element)
-        })</script>
+        var element = document.getElementById('product-container');
+        html2pdf(element)
+    })</script>
 }
-
 
 

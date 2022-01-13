@@ -6,7 +6,6 @@
     var result = await authorizationService.AuthorizeAsync(this.User, "ViewManageMenu");
 }
 
-@if (result.Succeeded)
 {
 <li class="sidebar-item">
     <a href="#forms" data-toggle="collapse" class="sidebar-link collapsed">

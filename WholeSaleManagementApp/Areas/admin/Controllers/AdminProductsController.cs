@@ -35,7 +35,7 @@ namespace WholeSalerWeb.Areas.Admin.Controllers
         public async Task<IActionResult> Index(string sortOrder, int page = 1, int CatID = 0)
         {
             var pageNumber = page;
-            var pageSize = 5;
+            var pageSize = 20;
 
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 

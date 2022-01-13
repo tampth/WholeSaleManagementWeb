@@ -42,6 +42,7 @@
         @if (Model.Count > 0)
         {
             decimal total = 0;
+            decimal final = 0;
             int stt = 1;
 
             <div class="row">
@@ -111,8 +112,7 @@
                                 <div class="left">
                                     <div class="coupon">
                                         <form action="#" target="_blank">
-                                            <input name="Coupon" placeholder="Nhập Mã Giảm Giá (Nếu Có)">
-                                            <button class="btn">ÁP DỤNG</button>
+                                            <input name="Coupon" placeholder="Đơn hàng sẽ được miễn phí giao hàng nếu hoá đơn trên 500,000 VNĐ" disabled>
                                         </form>
                                     </div>
 
@@ -122,8 +122,18 @@
                                 <div class="right">
                                     <ul>
                                         <li>Tổng tiền<span>@total.ToString("#,##0 VNĐ")</span></li>
-                                        <li>Phí giao hàng<span>Miễn phí</span></li>
-                                        <li class="last">Thanh toán<span>@total.ToString("#,##0 VNĐ")</span></li>
+                                        @if (total > 500000)
+                                        {
+                                            <li>Phí giao hàng<span>Miễn phí</span></li>
+                                            final = total;
+                                        }
+                                        else
+                                        {
+                                            <li>Phí giao hàng<span>20,000 VNĐ</span></li>
+                                            final = total + 20000;
+                                        }
+
+                                        <li class="last">Thanh toán<span>@final.ToString("#,##0 VNĐ")</span></li>
                                     </ul>
                                     <div class="button5">
                                         <a class="btn" asp-controller="Products" asp-action="Checkout">Checkout</a>
