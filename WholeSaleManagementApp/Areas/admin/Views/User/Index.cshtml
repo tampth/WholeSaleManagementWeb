@@ -21,7 +21,7 @@
             <td>
                 @if (string.IsNullOrEmpty(user.RoleNames))
                 {
-                    <a class="text-dark" asp-action="AddRole" asp-route-id="@user.Id">+ Thêm roles</a>
+                    <a class="text-dark" asp-action="AddRole"  asp-route-id="@user.Id">+ Thêm roles</a>
                 }
                 else
                 {
@@ -32,7 +32,7 @@
                 <a class="btn btn-success btn-sm" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
             </td>
             <td>
-                @if (user.EmailConfirmed)
+                @if (user.EmailConfirmed == false)
                 {
                     <p class="btn btn-success btn-sm"> Đã xác thực</p>
                 }

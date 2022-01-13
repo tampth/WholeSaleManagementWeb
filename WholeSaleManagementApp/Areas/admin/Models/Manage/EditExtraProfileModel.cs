@@ -12,6 +12,9 @@ namespace App.Areas.Identity.Models.ManageViewModels
       public string UserEmail { get; set; }
       [Display(Name = "Số điện thoại")]
       public string PhoneNumber { get; set; }
+      [Display(Name = "Tên khách hàng")]
+      [StringLength(400)]
+      public string FullName { get; set; }
 
       [Display(Name = "Địa chỉ")]
       [StringLength(400)]

@@ -1,0 +1,102 @@
+﻿@model IEnumerable<WholeSaleManagementApp.Models.Product>
+@{
+    ViewData["Title"] = "Thống kê";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Xem trước</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="AdminProducts" asp-action="Index">Quản lý sản phẩm</a></li>
+                    <li class="breadcrumb-item active">Xem trước</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<div class="col-12 col-xl-12">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <a id="printPDF" class="btn btn-primary" asp-action="InventoryReport">
+                    <i class="ui-icon-circle-plus"></i>
+                    <span>In</span>
+                </a>
+            </div>
+            <div class="d-md-flex">
+                <div class="card-body" id="product-container">
+
+                    <table class="table">
+                        <tr style="text-align: center;" border: 0;>
+                            <td>
+                                <p>TTOD Trading Company Limited - Công ty TNHH Thương Mại TTOD</p>
+                                <p>Địa chỉ: 321 Dương Quảng Hàm, Phường 6, Quận Gò Vấp, Thành phố Hồ Chí Minh</p>
+                                <h4 style="color: #1F497D;"><b>THỐNG KÊ TỒN KHO THEO SỐ LƯỢNG</b></h4>
+                                <em>(Ngày: @((DateTime)ViewBag.Date))</em>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr style="background-color: #1F497D; color:#FFFFFF;">
+                                <th scope="col">STT</th>
+                                <th scope="col">MÃ NỘI BỘ</th>
+                                <th scope="col">TÊN SẢN PHẨM</th>
+                                <th scope="col">GÍA BÁN (VNĐ)</th>
+                                <th scope="col">SỐ LƯỢNG</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            @{int i = 0;}
+                            @foreach (var item in Model)
+                            {
+                                <tr style="text-align: center;">
+                                    <td>@(++i)</td>
+                                    <td>dairy @item.ProductId</td>
+                                    <td style="text-align: left">@item.ProductName</td>
+                                    <td>@item.Price?.ToString("#,##0")</td>
+                                    <td>@item.UnitslnStock</td>
+                                </tr>
+                            }
+                        </tbody>
+                        
+                    </table>
+                    <table class="table">
+                        <tr style="text-align: center; background-color: #8EA9DB; color: #FFFFFF;">
+                            <td>TỔNG SỐ SẢN PHẨM TRONG DANH SÁCH</td>
+                            <td>@i</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js"
+            integrity="sha512-vDKWohFHe2vkVWXHp3tKvIxxXg0pJxeid5eo+UjdjME3DBFBn2F8yWOE0XmiFcFbXxrEOR1JriWEno5Ckpn15A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            referrerpolicy="no-referrer"></script>
+    <script>$("#printPDF").click(function () {
+            var element = document.getElementById('product-container');
+            html2pdf(element)
+        })</script>
+}
+
+
+

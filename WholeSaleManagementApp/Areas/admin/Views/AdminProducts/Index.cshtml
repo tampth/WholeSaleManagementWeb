@@ -1,0 +1,155 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<WholeSaleManagementApp.Models.Product>
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách sản phẩm" + CurrentPage;
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Danh sách sản phẩm </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý sản phẩm</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<div class="col-12 col-xl-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-md-flex">
+
+                <select required class="custom-select col-md-3" id="txtCatID" name="txtCatID" asp-items="ViewBag.DanhMuc">
+                    <option selected>Chọn danh mục</option>
+                    <option value="all">All</option>
+                </select>
+
+                <div class="custome-select col-md-3">
+                    <input id="keyword" name="keyword" type="search" class="form-control" placeholder="Tìm kiếm sản phẩm" />
+                </div>
+
+                <div class="col-lg-6 text-right">
+                    <a class="btn btn-primary" asp-action="Create"> <i class="ui-icon-circle-plus"></i> <span>Thêm sản phẩm</span></a>
+                    <a class="btn btn-primary" asp-action="ExportExcel"> <i class="ui-icon-circle-plus"></i> <span>Xuất file excel</span></a>
+                    <a class="btn btn-primary" asp-action="Report"> <i class="ui-icon-circle-plus"></i> <span>Xuất file PDF</span></a>
+                </div>
+            </div>
+            <br />
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.ActionLink("Tên sản phẩm", "Index", new { sortOrder = ViewBag.NameSortParm })
+                        </th>
+
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Tồn kho</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="records_table">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.ProductName
+                            </td>
+                            <td>@item.Cat.CatName</td>
+                            <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
+                            <td>@item.UnitslnStock</td>
+                            <td>
+                                @if (item.UnitslnStock.Value > 0)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <div class="badge badge-success"></div>
+                                        <div>In stock</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <div class="badge badge-success"></div>
+                                        <div>Out stock</div>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div aria-label="Page navigation example">
+                <ul class="pagination">
+                    <pager class="jsgrid-pager-current-page" list="@Model" asp-area="Admin" asp-controller="AdminProducts" asp-route-CatID="@ViewBag.CurrentCateID" asp-action="Index" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            jQuery("#txtCatID").change(function () {
+                var catID = jQuery(this).children(":selected").attr("value");
+                catID = parseFloat(catID);
+                $('#txtCatID option').removeAttr('selected');
+                $("#txtCatID > [value=" + catID + "]").attr("selected", "true");
+                $.ajax({
+                    url: '/admin/AdminProducts/Filter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        CatID: catID
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+
+            $("#keyword").keyup(function () {
+                var strkeyword = $('#keyword').val();
+                $.ajax({
+                    url: '/admin/Search/FindProduct/',
+                    datatype: "json",
+                    type: "POST",
+                    data: { keyword: strkeyword },
+                    async: true,
+                    success: function (results) {
+                        $("#records_table").html("");
+                        $("#records_table").html(results);
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $('.select2').select2()
+        });
+    </script>
+}

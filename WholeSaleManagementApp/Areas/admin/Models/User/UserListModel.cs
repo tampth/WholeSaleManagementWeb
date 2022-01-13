@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using App.Models;
 using WholeSaleManagementApp.Models;
 
 namespace App.Areas.Identity.Models.UserViewModels

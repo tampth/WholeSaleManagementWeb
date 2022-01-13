@@ -43,5 +43,6 @@ namespace WholeSaleManagementApp.Models
 
         public CategoryBlog ParentCategory { set; get; }
 
+
     }
 }

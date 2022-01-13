@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WholeSaleManagementApp.Models;
 using WholeSaleManagementApp.Models.Blog;
-using WholeSaleManagementApp.Models.Contact;
+using WholeSalerWeb.Models;
 
 namespace WholeSaleManagementApp.Data
 {
@@ -16,6 +17,7 @@ namespace WholeSaleManagementApp.Data
         {
 
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,7 +51,6 @@ namespace WholeSaleManagementApp.Data
             });
         }
 
-        public DbSet<Contact> Contacts { get; set; }
 
         public DbSet<CategoryBlog> CategoryBlogs { get; set; }
 
@@ -57,14 +58,12 @@ namespace WholeSaleManagementApp.Data
 
         public DbSet<PostCategory> PostCategories { get; set; }
 
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
-        public DbSet<Deal>  Deals { get; set; }
+        public DbSet<Product> Products { get; set; }
+         
+        public DbSet<Order> Orders { get; set; }
 
-        public DbSet<Quotation> Quotations { get; set; }
-
-        public DbSet<Orderline> Orderlines { get; set; }
-
-        public DbSet<Product>  Products { get; set; }
+        public DbSet<Orderdetail> Orderdetails { get; set; }
     }
 }

@@ -1,0 +1,68 @@
+﻿<nav id="sidebar" class="sidebar">
+    <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="index.html">
+            <span class="align-middle">WholeSaler</span>
+        </a>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-header">
+                Pages
+            </li>
+
+            <li class="sidebar-item active">
+                <a class="sidebar-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="pages-profile.html">
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Quản lý đơn hàng</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a href="#forms" data-toggle="collapse" class="sidebar-link collapsed">
+                    <i class="align-middle" data-feather="check-circle"></i> <span class="align-middle">Quản lý sản phẩm</span>
+                </a>
+                <ul id="forms" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+                    <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="Categories" asp-area="admin">Quản lý danh mục sản phẩm</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="AdminProducts" asp-area="admin">Quản lý sản phẩm</a></li>
+                </ul>
+            </li>
+
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="pages-invoice.html">
+                    <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Quản lý khách hàng</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-area="Admin" asp-controller="Tintucs" asp-action="Index">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Quản lý tin tức</span>
+                </a>
+            </li>
+
+
+            <li class="sidebar-item">
+                <partial name="_ConfigurationDropdown"/>
+            </li>
+
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="tables-bootstrap.html">
+                    <i class="align-middle" data-feather="list"></i> <span class="align-middle">Quản lý giao hàng</span>
+                </a>
+            </li>
+
+
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="charts-chartjs.html">
+                    <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Quản lý Pages</span>
+                </a>
+            </li>
+
+        </ul>
+
+        
+    </div>
+</nav>

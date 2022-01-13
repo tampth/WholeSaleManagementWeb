@@ -1,5 +1,6 @@
 ﻿using App.Data;
 using App.Services;
+using AspNetCoreHero.ToastNotification;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using WholeSaleManagementApp.Data;
 using WholeSaleManagementApp.Models;
@@ -31,10 +34,27 @@ namespace WholeSaleManagementApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddDbContext<MyDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("Default")));
 
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
             services.AddRazorPages();
+
+
+            services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
+
+            services.AddDistributedMemoryCache();            // Đăng ký dịch vụ lưu cache trong bộ nhớ (Session sẽ sử dụng nó)
+            services.AddSession((option) =>
+            {                                                // Đăng ký dịch vụ Session
+                option.Cookie.Name = "WholeSale";             // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
+                option.IdleTimeout = new TimeSpan(0, 30, 0);    // Thời gian tồn tại của Session
+            });
+            services.AddSession((option) =>
+            {                                                // Đăng ký dịch vụ Session
+                option.Cookie.Name = "WholeSale";             // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
+                option.IdleTimeout = new TimeSpan(0, 30, 0);    // Thời gian tồn tại của Session
+            });
 
             // Đăng ký các dịch vụ của Identity
             services.AddIdentity<AppUser, IdentityRole>()
@@ -99,6 +119,14 @@ namespace WholeSaleManagementApp
             });
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("User", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.RequireRole(RoleName.Administrator);
+                });
+            });
+            services.AddAuthorization(options =>
+            {
                 options.AddPolicy("SaleEmployee", builder =>
                 {
                     builder.RequireAuthenticatedUser();
@@ -131,6 +159,7 @@ namespace WholeSaleManagementApp
             });
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication(); //xac dinh danh tinh
             app.UseAuthorization(); //xac thuc quyen truy cap

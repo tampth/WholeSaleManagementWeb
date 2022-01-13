@@ -8,16 +8,17 @@
 
 @if (result.Succeeded)
 {
-<div class="dropdown">
-    <a class="btn btn-outline-dark dropdown-toggle" href="#"
-       id="managedropdownmenu" data-toggle="dropdown">Configuration</a>
-    <div class="dropdown-menu" aria-labelledby="managedropdownmenu">
-        <a class="dropdown-item" asp-action="Index" asp-controller="Configuration" asp-area="admin">Database</a>
-        <a class="dropdown-item" asp-action="Index" asp-controller="Role" asp-area="admin">Quan ly role</a>
-        <a class="dropdown-item" asp-action="Index" asp-controller="User" asp-area="admin">Quan ly user</a>
-        <a class="dropdown-item" asp-action="Index" asp-controller="CategoryBlogs" asp-area="admin">Quan ly danh muc blog</a>
-        <a class="dropdown-item" asp-action="Index" asp-controller="Posts" asp-area="admin">Quan ly bai viet</a>
-        <a target="_blank" class="dropdown-item" asp-action="Index" asp-controller="FileManager" asp-area="Files">Quan ly file</a>
-    </div>
-</div>
+<li class="sidebar-item">
+    <a href="#forms" data-toggle="collapse" class="sidebar-link collapsed">
+        <i class="align-middle" data-feather="check-circle"></i> <span class="align-middle">Quản lý hệ thống</span>
+    </a>
+    <ul id="forms" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+        <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="Configuration" asp-area="admin">Database</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="Role" asp-area="admin">Quan ly role</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="User" asp-area="admin">Quan ly user</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="CategoryBlogs" asp-area="admin">Quan ly danh muc blog</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="Posts" asp-area="admin">Quan ly bai viet</a></li>
+        <li class="sidebar-item"><a target="_blank" class="sidebar-link" asp-action="Index" asp-controller="FileManager" asp-area="Files">Quan ly file</a></li>
+    </ul>
+</li>
 }

@@ -1,0 +1,137 @@
+﻿@model WholeSaleManagementApp.Models.Product
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Chỉnh sửa sản phẩm</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="AdminProducts" asp-action="Index">Quản lý sản phẩm</a></li>
+                    <li class="breadcrumb-item active">Chỉnh sửa sản phẩm</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<main class="content">
+    <div class="container-fluid p-0">
+
+
+        <form asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@Model.ProductId" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <input type="hidden" asp-for="Thumb" />
+            <input type="hidden" asp-for="DateCreated" />
+
+            <div class="row">
+
+                <div class="col-md-3 col-xl-2">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Mục nhập</h5>
+                        </div>
+
+                        <div class="list-group list-group-flush" role="tablist">
+                            <a class="list-group-item list-group-item-action active" data-toggle="list" href="#info" role="tab">
+                                Thông tin chung
+                            </a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#description" role="tab">
+                                Mô tả
+                            </a>
+                            <button type="submit" class="btn btn-success">Cập nhật</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-xl-10">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+
+                            <div class="card">
+                                <div class="card-header">
+
+                                    <h5 class="card-title mb-0">Public info</h5>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label asp-for="CatId" class="control-label">Chọn danh mục</label>
+                                                <select asp-for="CatId" class="form-control" asp-items="ViewBag.DanhMuc"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="ProductName" class="control-label">Tên sản phẩm</label>
+                                                <input asp-for="ProductName" class="form-control" />
+                                                <span asp-validation-for="ProductName" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="ShortDesc" class="control-label">Mô tả ngắn</label>
+                                                <input asp-for="ShortDesc" class="form-control" />
+                                                <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="text-center form-group">
+                                                <label asp-for="Thumb" class="control-label">Thêm hình ảnh</label>
+                                                <input name="fThumb" type="file" asp-for="Thumb" class="form-control-file" />
+                                                <span asp-validation-for="Thumb" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="Price" class="control-label">Giá bán</label>
+                                            <input asp-for="Price" class="form-control" />
+                                            <span asp-validation-for="Price" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="UnitslnStock" class="control-label"></label>
+                                            <input asp-for="UnitslnStock" class="form-control" />
+                                            <span asp-validation-for="UnitslnStock" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="description" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+
+                                    <h5 class="card-title mb-0">Public info</h5>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label asp-for="Description" class="control-label"></label>
+                                                <textarea asp-for="Description" class="form-control"></textarea>
+                                                <span asp-validation-for="Description" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </form>
+
+    </div>
+</main>
+
+@{
+    var summernote = new WholeSaleManagementApp.Models.Summernote("#Description", true);
+}
+
+<partial name="_Summernote" model="summernote" />
+

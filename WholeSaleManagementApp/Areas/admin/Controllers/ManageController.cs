@@ -63,6 +63,7 @@ namespace App.Areas.Identity.Controllers
                 AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user),
                 profile = new EditExtraProfileModel()
                 {
+                    FullName = user.FullName,
                     BirthDate = user.Birthday,
                     HomeAdress = user.Address,
                     UserName = user.UserName,
@@ -378,6 +379,7 @@ namespace App.Areas.Identity.Controllers
             
             var model = new EditExtraProfileModel()
             {
+                FullName = user.FullName,
                 BirthDate = user.Birthday,
                 HomeAdress = user.Address,
                 UserName = user.UserName,
@@ -391,6 +393,7 @@ namespace App.Areas.Identity.Controllers
         {
             var user = await GetCurrentUserAsync();
 
+            user.FullName = model.FullName;
             user.Address = model.HomeAdress;
             user.Birthday = model.BirthDate;
             await _userManager.UpdateAsync(user);
