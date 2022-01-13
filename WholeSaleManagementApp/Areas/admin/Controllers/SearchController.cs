@@ -45,5 +45,29 @@ namespace WholeSalerWeb.Areas.Admin.Controllers
                 return PartialView("ListProductsSearchPartial", ls);
             }
         }
+
+        [HttpPost]
+        public IActionResult FindContact(string keyword)
+        {
+            List<Contact> ls = new List<Contact>();
+            if (string.IsNullOrEmpty(keyword) || keyword.Length < 1)
+            {
+                return PartialView("ListContactsSearchPartial", null);
+            }
+            ls = _context.Contacts.AsNoTracking()
+                                  .Include(p => p.Company)
+                                  .Where(x => x.FullName.Contains(keyword))
+                                  .OrderByDescending(x => x.FullName)
+                                  .Take(10)
+                                  .ToList();
+            if (ls == null)
+            {
+                return PartialView("ListContactsSearchPartial", null);
+            }
+            else
+            {
+                return PartialView("ListContactsSearchPartial", ls);
+            }
+        }
     }
 }

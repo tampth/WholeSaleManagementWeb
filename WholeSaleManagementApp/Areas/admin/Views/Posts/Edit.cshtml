@@ -11,9 +11,10 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="PostId" />
+            <input type="hidden" asp-for="Thumb" />
 
             <div class="form-group">
                 <label asp-for="CategoryIDs" class="control-label"></label>
@@ -34,6 +35,11 @@
                 <label asp-for="Slug" class="control-label"></label>
                 <input asp-for="Slug" class="form-control" />
                 <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+            <div class="text-center form-group">
+                <label asp-for="Thumb" class="control-label">Thêm hình ảnh</label>
+                <input name="fThumb" type="file" asp-for="Thumb" class="form-control-file" />
+                <span asp-validation-for="Thumb" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>

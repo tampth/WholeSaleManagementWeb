@@ -51,6 +51,7 @@
     <Folder Include="Areas\Files\Models\" />
     <Folder Include="Uploads\hi\" />
     <Folder Include="wwwroot\files\" />
+    <Folder Include="wwwroot\images\posts\" />
   </ItemGroup>
 
   <ItemGroup>

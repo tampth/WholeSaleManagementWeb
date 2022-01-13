@@ -65,5 +65,19 @@ namespace WholeSaleManagementApp.Data
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<Orderdetail> Orderdetails { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+
+        public DbSet<Deal> Deals { get; set; }
+
+        public DbSet<Quotation> Quotations { get; set; }
+
+        public DbSet<DealStatus> DealStatuses { get; set; }
+
+        public DbSet<QuoteStatus> QuoteStatuses { get; set; }
+
+        public DbSet<QuoteLine> QuoteLines { get; set; }
+
+        public DbSet<Company> Companies { get; set; }
+
     }
 }

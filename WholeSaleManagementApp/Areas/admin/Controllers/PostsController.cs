@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Data;
@@ -14,6 +15,7 @@ using WholeSaleManagementApp.Areas.admin.Models.Blog;
 using WholeSaleManagementApp.Data;
 using WholeSaleManagementApp.Models;
 using WholeSaleManagementApp.Models.Blog;
+using WholeSalerWeb.Helpper;
 
 namespace WholeSaleManagementApp.Areas.admin.Controllers
 {
@@ -105,7 +107,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,Slug,Content,Published,CategoryIDs")] CreatePostModel post)
+        public async Task<IActionResult> Create([Bind("Title,Description,Slug,Thumb,Content,Published,CategoryIDs")] CreatePostModel post, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
 
             var categories = await _context.CategoryBlogs.ToListAsync();
@@ -127,6 +129,14 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
 
             if (ModelState.IsValid)
             {
+                post.Title = Ultilities.ToTitleCase(post.Title);
+                if (fThumb != null)
+                {
+                    string extension = Path.GetExtension(fThumb.FileName);
+                    string image = Ultilities.SEOUrl(post.Title) + extension;
+                    post.Thumb = await Ultilities.UploadFile(fThumb, @"posts", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(post.Thumb)) post.Thumb = "default.jpg";
                 var user = await _userManager.GetUserAsync(this.User);
 
                 post.DateCreated = post.DateUpdated = DateTime.Now;
@@ -177,6 +187,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                 Title = post.Title,
                 Content = post.Content,
                 Description = post.Description,
+                Thumb = post.Thumb,
                 Slug = post.Slug,
                 Published = post.Published,
                 CategoryIDs = post.PostCategories.Select(pc => pc.CategoryID).ToArray()
@@ -193,7 +204,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Description,Slug,Content,Published,CategoryIDs")] CreatePostModel post)
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Description,Slug,Thumb,Content,Published,CategoryIDs")] CreatePostModel post, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (id != post.PostId)
             {
@@ -218,6 +229,14 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
             {
                 try
                 {
+                    post.Title = Ultilities.ToTitleCase(post.Title);
+                    if (fThumb != null)
+                    {
+                        string extension = Path.GetExtension(fThumb.FileName);
+                        string image = Ultilities.SEOUrl(post.Title) + extension;
+                        post.Thumb = await Ultilities.UploadFile(fThumb, @"posts", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(post.Thumb)) post.Thumb = "default.jpg";
 
                     var postUpdate = await _context.Posts.Include(p => p.PostCategories).FirstOrDefaultAsync(p => p.PostId == id);
                     if (postUpdate == null)
@@ -230,6 +249,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
                     postUpdate.Content = post.Content;
                     postUpdate.Published = post.Published;
                     postUpdate.Slug = post.Slug;
+                    postUpdate.Thumb = post.Thumb;
                     postUpdate.DateUpdated = DateTime.Now;
 
                     //Update PostCategory
