@@ -79,5 +79,6 @@ namespace WholeSaleManagementApp.Data
 
         public DbSet<Company> Companies { get; set; }
 
+
     }
 }

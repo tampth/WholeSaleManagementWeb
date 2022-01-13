@@ -69,5 +69,28 @@ namespace WholeSalerWeb.Areas.Admin.Controllers
                 return PartialView("ListContactsSearchPartial", ls);
             }
         }
+
+        [HttpPost]
+        public IActionResult FindOrder(string keyword)
+        {
+            List<Order> ls = new List<Order>();
+            if (string.IsNullOrEmpty(keyword) || keyword.Length < 1)
+            {
+                return PartialView("ListOrdersSearchPartial", null);
+            }
+            ls = _context.Orders.AsNoTracking()
+                                  .Where(x => x.FullName.Contains(keyword))
+                                  .OrderByDescending(x => x.FullName)
+                                  .Take(10)
+                                  .ToList();
+            if (ls == null)
+            {
+                return PartialView("ListOrdersSearchPartial", null);
+            }
+            else
+            {
+                return PartialView("ListOrdersSearchPartial", ls);
+            }
+        }
     }
 }

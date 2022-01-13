@@ -16,10 +16,25 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" asp-area="admin" asp-controller="Contacts" asp-action="Index">
+                <a class="sidebar-link" asp-area="admin" asp-controller="AdminContacts" asp-action="Index">
                     <i class="align-middle" data-feather="user"></i> <span class="align-middle">Quản lý liên hệ</span>
                 </a>
             </li>
+            <li class="sidebar-item">
+                <a href="#forms" data-toggle="collapse" class="sidebar-link collapsed">
+                    <i class="align-middle" data-feather="check-circle"></i> <span class="align-middle">Quản lý khách hàng</span>
+                </a>
+                <ul id="forms" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+                    <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="AdminCompanies" asp-area="admin">Quản lý khách hàng doanh nghiệp</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" asp-action="Index" asp-controller="AdminProducts" asp-area="admin">Quản lý khách hàng cá nhân</a></li>
+                </ul>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-area="admin" asp-controller="AdminDeals" asp-action="Index">
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Quản lý cơ hội</span>
+                </a>
+            </li>
+
 
             <li class="sidebar-item">
                 <a href="#forms" data-toggle="collapse" class="sidebar-link collapsed">
@@ -32,8 +47,8 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-invoice.html">
-                    <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Quản lý khách hàng</span>
+                <a class="sidebar-link" asp-area="admin" asp-controller="Orders" asp-action="Index">
+                    <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Quản lý hóa đơn</span>
                 </a>
             </li>
 
@@ -45,21 +60,10 @@
 
 
             <li class="sidebar-item">
-                <partial name="_ConfigurationDropdown"/>
+                <partial name="_ConfigurationDropdown" />
             </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="tables-bootstrap.html">
-                    <i class="align-middle" data-feather="list"></i> <span class="align-middle">Quản lý giao hàng</span>
-                </a>
-            </li>
-
-
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="charts-chartjs.html">
-                    <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Quản lý Pages</span>
-                </a>
-            </li>
+            
 
         </ul>
 

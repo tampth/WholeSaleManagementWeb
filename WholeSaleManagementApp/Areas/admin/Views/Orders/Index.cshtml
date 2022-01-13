@@ -1,8 +1,8 @@
 ﻿@using PagedList.Core.Mvc
-@model PagedList.Core.IPagedList<WholeSaleManagementApp.Models.Contact>
+@model PagedList.Core.IPagedList<WholeSaleManagementApp.Models.Order>
 @{
     int CurrentPage = ViewBag.CurrentPage;
-    ViewData["Title"] = "Danh sách liên hệ" + CurrentPage;
+    ViewData["Title"] = "Danh sách sản phẩm" + CurrentPage;
     Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -10,12 +10,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Danh sách liên hệ </h1>
+                <h1 class="m-0">Danh sách hóa đơn </h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
-                    <li class="breadcrumb-item active">Quản lý liên hệ</li>
+                    <li class="breadcrumb-item active">Quản lý hóa đơn</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -26,18 +26,18 @@
     <div class="card">
         <div class="card-header">
             <div class="d-md-flex">
-
-                <select required class="custom-select col-md-3" id="txtCompany" name="txtCompany" asp-items="ViewBag.Company">
-                    <option selected>Chọn công ty</option>
+                <!--
+                <select required class="custom-select col-md-3" id="txtCatID" name="txtCatID" asp-items="ViewBag.DanhMuc">
+                    <option selected>Chọn danh mục</option>
                     <option value="all">All</option>
-                </select>
+                </select>-->
 
                 <div class="custome-select col-md-3">
-                    <input id="keyword" name="keyword" type="search" class="form-control" placeholder="Tìm kiếm liên hệ" />
+                    <input id="keyword" name="keyword" type="search" class="form-control" placeholder="Tìm kiếm hóa đơn" />
                 </div>
 
                 <div class="col-lg-6 text-right">
-                    <a class="btn btn-primary" asp-action="Create"> <i class="ui-icon-circle-plus"></i> <span>Thêm liên hệ</span></a>
+                    <a class="btn btn-primary" asp-action="Create"> <i class="ui-icon-circle-plus"></i> <span>Thêm sản phẩm</span></a>
                     <a class="btn btn-primary" asp-action="ExportExcel"> <i class="ui-icon-circle-plus"></i> <span>Xuất file excel</span></a>
                     <a class="btn btn-primary" asp-action="Report"> <i class="ui-icon-circle-plus"></i> <span>Xuất file PDF</span></a>
                 </div>
@@ -48,12 +48,11 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.ActionLink("Tên liên hệ", "Index", new { sortOrder = ViewBag.NameSortParm })
+                            @Html.ActionLink("Tên khách hàng", "Index", new { sortOrder = ViewBag.NameSortParm })
                         </th>
 
-                        <th>Email</th>
-                        <th>Số điện thoại</th>
-                        <th>Công ty</th>
+                        <th>Ngày thanh toán</th>
+                        <th>Số tiền</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -64,13 +63,13 @@
                             <td>
                                 @item.FullName
                             </td>
-                            <td>@item.Email</td>
-                            <td>@item.Phone</td>
-                            <td>@item.CompanyName</td>
+                            <td>@item.PaymentDate</td>
+                            <td>@item.Total.Value.ToString("#,##0") VNĐ</td>
+                           
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
                             </td>
                         </tr>
                     }
@@ -78,7 +77,7 @@
             </table>
             <div aria-label="Page navigation example">
                 <ul class="pagination">
-                    <pager class="jsgrid-pager-current-page" list="@Model" asp-area="admin" asp-controller="Contacts" asp-route-CatID="@ViewBag.CurrentCateID" asp-action="Index" />
+                    <pager class="jsgrid-pager-current-page" list="@Model" asp-area="admin" asp-controller="AdminOrders" asp-route-CatID="@ViewBag.CurrentCateID" asp-action="Index" />
                 </ul>
             </div>
         </div>
@@ -88,17 +87,17 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            jQuery("#txtCompany").change(function () {
-                var ComID = jQuery(this).children(":selected").attr("value");
-                ComID = parseFloat(ComID);
-                $('#txtCompany option').removeAttr('selected');
-                $("#txtCompany > [value=" + ComID + "]").attr("selected", "true");
+            jQuery("#txtCatID").change(function () {
+                var catID = jQuery(this).children(":selected").attr("value");
+                catID = parseFloat(catID);
+                $('#txtCatID option').removeAttr('selected');
+                $("#txtCatID > [value=" + catID + "]").attr("selected", "true");
                 $.ajax({
-                    url: '/admin/Contacts/Filter',
+                    url: '/admin/AdminProducts/Filter',
                     datatype: "json",
                     type: "GET",
                     data: {
-                        ComID: ComID
+                        CatID: catID
                     },
                     async: true,
                     success: function (results) {
@@ -115,7 +114,7 @@
             $("#keyword").keyup(function () {
                 var strkeyword = $('#keyword').val();
                 $.ajax({
-                    url: '/admin/Search/FindContact/',
+                    url: '/admin/Search/FindOrder/',
                     datatype: "json",
                     type: "POST",
                     data: { keyword: strkeyword },

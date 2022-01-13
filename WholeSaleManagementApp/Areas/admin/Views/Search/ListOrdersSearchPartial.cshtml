@@ -1,0 +1,22 @@
+﻿@model List<WholeSaleManagementApp.Models.Order>
+
+@if (Model != null)
+{
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.FullName
+            </td>
+            <td>@item.PaymentDate</td>
+            <td>@item.Total.Value.ToString("#,##0") VNĐ</td>
+            
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+            </td>
+        </tr>
+    }
+
+}
