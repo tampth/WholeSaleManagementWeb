@@ -21,7 +21,7 @@ namespace WholeSaleManagementApp.Models
         [Display(Name = "Tác giả")]
         public AppUser User { set; get; }
         public int? TransactStatusId { get; set; }
-        public DateTime? OrderDate { get; set; }
+        public DateTime OrderDate { get; set; }
         public DateTime? ShipDate { get; set; }
         public bool? Deleted { get; set; }
         public bool? Paid { get; set; }

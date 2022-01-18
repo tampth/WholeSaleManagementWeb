@@ -9,6 +9,19 @@
     <Content Remove="Models\Contact\**" />
     <EmbeddedResource Remove="Models\Contact\**" />
     <None Remove="Models\Contact\**" />
+    <None Remove="smssave\0366866701-75f41a11-2660-4c34-bd1e-fa33233013e9.txt" />
+    <None Remove="Uploads\hi\pho-mai-vien.gif" />
+    <None Remove="Uploads\hi\DefenselessLimitedAndeancondor-max-1mb.gif" />
+    <None Remove="Uploads\hi\KbpU.gif" />
+    <None Remove="Uploads\hi\127fe868d4cf13c8bc252d898c4b4158.gif" />
+    <None Remove="Uploads\hi\giphy.gif" />
+    <None Remove="Uploads\hi\20211216_010226_690104_che-pham-tu-sua-2.max-1800x1800.jpg" />
+    <None Remove="Uploads\hi\20211215_150532_453411_Sua-tach-beo-la-gi.max-1800x1800.jpg" />
+    <Content Remove="wwwroot\images\products\Empty-pana.jpg" />
+    <Content Remove="wwwroot\images\posts\hng-n-n-cc-hm-a.jpg" />
+    <Content Remove="wwwroot\images\posts\ai-r-a-a-rong-h-n.jpg" />
+    <Content Remove="wwwroot\images\posts\h-hm-a-m-hng.jpg" />
+    <Content Remove="wwwroot\images\products\Logo.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -135,7 +135,7 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,UserId,TransactStatusId,OrderDate,ShipDate,Deleted,Paid,PaymentDate,PaymentId,Note,FullName,Address,Email,Phone,Total")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,UserId,TransactStatusId,ShipDate,Deleted,Paid,PaymentDate,PaymentId,Note")] Order order)
         {
             if (id != order.OrderId)
             {
@@ -199,6 +199,36 @@ namespace WholeSaleManagementApp.Areas.admin.Controllers
         private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.OrderId == id);
+        }
+
+        public IActionResult Report()
+        {
+            return View();
+        }
+
+        public IActionResult SalesReport(int i_year)
+        {
+            List<Product> listTK = (from temp in (from hd in _context.Orders
+                                                  join cthd in _context.Orderdetails on hd.OrderId equals cthd.OrderId
+                                                  where hd.OrderDate.Year == i_year
+                                                  group cthd by cthd.ProductId into grp
+                                                  select new
+                                                  {
+                                                      masp = grp.Key,
+                                                      sl = grp.Sum(cthd => cthd.Quantity)
+                                                  })
+                                    join sp in _context.Products on temp.masp equals sp.ProductId
+                                    select new Product
+                                    {
+                                        ProductName = sp.ProductName,
+                                        Price = sp.Price,
+                                        UnitslnStock = temp.sl,
+                                        ProductId = sp.ProductId
+                                    }).ToList();
+
+            ViewBag.Date = DateTime.Now;
+            return View(listTK);
+            
         }
     }
 }

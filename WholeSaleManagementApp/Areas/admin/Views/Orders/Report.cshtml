@@ -1,0 +1,45 @@
+﻿@model IEnumerable<WholeSaleManagementApp.Models.Order>
+@{
+    ViewData["Title"] = "Thống kê";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Thống kê </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Orders" asp-action="Index">Quản lý hóa đơn</a></li>
+                    <li class="breadcrumb-item active">Thống kê</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<div class="col-12 col-xl-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-md-flex">
+
+                <form action="SalesReport">
+                    <div class="form-group">
+                        <select id="i_year" class="form-control custom-select" name="i_year">
+                            <option selected>Chọn năm</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2020</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Thống kê doanh số</button>
+                </form>
+            </div>
+            <br />
+            <br />
+        </div>
+    </div>
+</div>

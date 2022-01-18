@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using WholeSaleManagementApp.Data;
 using WholeSaleManagementApp.Models;
 using WholeSalerWeb.Models;
+using Microsoft.AspNetCore.Session;
+
 
 namespace WholeSalerWeb.Controllers
 {
@@ -33,7 +35,7 @@ namespace WholeSalerWeb.Controllers
         public async Task<IActionResult> Index(int page = 1, int CatID = 0)
         {
             var pageNumber = page;
-            var pageSize = 15;
+            var pageSize = 24;
 
             var ps = from p in _context.Products
                      select p;
@@ -88,6 +90,7 @@ namespace WholeSalerWeb.Controllers
             ViewBag.CurrentPage = page;
             return View(models);
         }
+
         public IActionResult Details(int id)
         {
             var product = _context.Products.Include(x => x.Cat).FirstOrDefault(x => x.ProductId == id);
@@ -129,74 +132,22 @@ namespace WholeSalerWeb.Controllers
             session.SetString(CARTKEY, jsoncart);
         }
 
-        ////Hiển thị card
-        public IActionResult Cart()
-        {
-            return View(GetCartItems());
-        }
-
-        //// Thêm sản phẩm vô cart
-        [HttpPost]
-        public IActionResult AddToCart([FromRoute] int productID, [FromRoute] int? amount)
-        {
-
-            var sanpham = _context.Products
-                .Where(p => p.ProductId == productID)
-                .FirstOrDefault();
-
-            var cart = GetCartItems();
-            var item = cart.Find(p => p.Product.ProductId == productID);
-
-            if (sanpham == null)
-                return NotFound("Không có sản phẩm");
-
-            //    // Xử lý đưa vào Cart ...
-            if (item != null)
-            {
-                if (amount.HasValue)
-                {
-                    item.amount = amount.Value;
-                }
-                else
-                {
-                    item.amount++;
-                }
-            }
-            else
-            {
-                item = new Cart
-                {
-                    amount = amount.HasValue ? amount.Value : 1,
-                    Product = sanpham
-                };
-                cart.Add(item);
-            }
-
-            //    // Lưu cart vào Session
-            SaveCartSession(cart);
-            ViewData["Cart"] = "Thêm thành công!";
-            //    // Chuyển đến trang hiện thị Cart
-            return RedirectToAction(nameof(Cart));
-        }
-
-        public IActionResult AddToCart(int productID)
+        public IActionResult AddToCart([FromRoute] int productid)
         {
             // var product = _context.Products.Include(x => x.Cat).FirstOrDefault(x => x.ProductId == id);
-            productID = 11;
+            productid = 11;
 
             var sanpham = _context.Products
-                .Where(p => p.ProductId == productID)
+                .Where(p => p.ProductId == productid)
                 .FirstOrDefault();
 
-            var cart = GetCartItems();
-            var item = cart.Find(p => p.Product.ProductId == productID);
-
-            Console.WriteLine(productID);
-
             if (sanpham == null)
-                return NotFound("Không có sản phẩm " + productID);
+                return NotFound("Không có sản phẩm " + productid);
 
             // Xử lý đưa vào Cart ...
+            var cart = GetCartItems();
+            var item = cart.Find(p => p.Product.ProductId == productid);
+
             if (item != null)
             {
                 if (item.amount + 1 > sanpham.UnitslnStock)
@@ -220,10 +171,17 @@ namespace WholeSalerWeb.Controllers
 
             //    // Lưu cart vào Session
             SaveCartSession(cart);
-            ViewData["Cart"] = "Thêm thành công!";
             //    // Chuyển đến trang hiện thị Cart
             return RedirectToAction(nameof(Cart));
         }
+
+        ////Hiển thị card
+        public IActionResult Cart()
+        {
+            return View(GetCartItems());
+        }
+
+      
 
         ///// xóa item trong cart
         public IActionResult RemoveCart([FromRoute] int ProductId)
@@ -378,168 +336,161 @@ namespace WholeSalerWeb.Controllers
             return await _userManager.GetUserAsync(HttpContext.User);
         }
 
-        public async Task<IActionResult> CheckOutAsync([FromForm] string email, [FromForm] string address)
-        {
-            var user = await GetCurrentUser();
-
-            if (user == null)
-            {
-                return Redirect("/Admin/Account/Login");
-            }
-            var cart = GetCartItems();
-
-            return View(cart);
-        }
 
 
-        [HttpPost]
-        public async Task<IActionResult> CheckOutAsync([FromForm] string hoten, [FromForm] string diachi, [FromForm] string sdt, [FromForm] string email)
-        {
-            Console.WriteLine("vô hàm thử");
-            Console.WriteLine("{0}", hoten);
-            Console.WriteLine("{0}", diachi);
-            Console.WriteLine("{0}", sdt);
-            Console.WriteLine("{0}", email);
-
-            //Xử lý khi đặt hàng
-            var cart = GetCartItems();
-            ViewData["email"] = email;
-            ViewData["address"] = diachi;
-            ViewData["phone"] = sdt;
-            ViewData["cart"] = cart;
-
-            foreach (var item in cart)
-            {
-                Console.WriteLine("{0}", item.amount);
-            }
-
-            var id = from hoadon in _context.Orders
-                     orderby hoadon.OrderId descending
-                     select hoadon.OrderId;
-            int temp;
-            if (id.Count() == 0)
-            {
-                temp = 1;
-            }
-            else
-            {
-                temp = id.First();
-                temp++;
-            }
-            Console.WriteLine("{0}", temp);
-            if (!string.IsNullOrEmpty(email))
-            {
-                Order hd = new Order();
-                long? total = 0;
-                hd.OrderId = temp;
-                hd.FullName = hoten;
-                hd.Address = diachi;
-                hd.Phone = sdt;
-                hd.OrderDate = DateTime.Now;
-                var user = await GetCurrentUser();
-                hd.UserId = user.Id;
-
-                foreach (var item in cart)
-                {
-                    total += item.Product.Price * item.amount;
-                }
-
-                long ship;
-                if (total > 500000)
-                {
-                    hd.Total = total;
-                     ship = 0;
-                }
-                else
-                {
-                    hd.Total = total + 20000;
-                    ship = 20000;
-                }
-                
-
-                hd.TransactStatusId = 1; // chờ xử lý
-
-                _context.Orders.Add(hd);
-                _context.SaveChanges();
-
-                int lastID = hd.OrderId;
 
 
-                // gửi mail thử
-                string subject = "ĐƠN ĐẶT HÀNG";
-                string body =  " <p> Xin chào" + hoten + " </p> " +
-                               " <br></br> <div style=\" width: 700px; \">" +
-                               " <br></br> " +
-                               " <p> TTOD đã nhận được thông tin đặt hàng của bạn với mã đơn hàng: " + hd.OrderId + "</p>" +
-                               " <p> Vào ngày: " + hd.OrderDate + "</p>" +
-                               " <div style =\"width: 95%; padding: 10px;\" > " +
-                               " <h4 style = \"text-align: center;\" > THÔNG TIN ĐƠN HÀNG - DÀNH CHO NGƯỜI MUA </h4>" +
-                               " <p> Mã đơn hàng: " + hd.OrderId + " </p>" +
-                               " <p> Ngày đặt hàng: " + hd.OrderDate + "</p>" +
-                               " <p> Địa chỉ nhận hàng:  " + diachi + "</p>" +
-
-                               " <h4 style = \"text-align: center;\" > CHI TIẾT ĐƠN HÀNG </h4> " +
-                               "<table  style=\"width: 100%; border: 1px solid black; border-collapse: collapse; \"> " +
-                                     " <tr style = \" border:1px solid black; border-collapse: collapse;background-color: #fff200;color: #5f5f5f;\" > " +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:150px;\" > Sản phẩm </th>" +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:70px;\" > Số lượng </th> " +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Đơn giá </th> " +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Số tiền </th> " +
-                                     " </tr> ";
-                foreach (var item in cart)
-                {
-                    Orderdetail ct = new Orderdetail();
-                    ct.OrderId = lastID;
-                    ct.ProductId = item.Product.ProductId;
-                    ct.Quantity = item.amount;
-                    long? tong = item.amount * item.Product.Price;
-                    _context.Add(ct);
-                    _context.SaveChanges();
-
-                    // Cập nhật lại số lượng sản phẩm
-                    Product sp = _context.Products.Where(sp => sp.ProductId == item.Product.ProductId).First();
-                    sp.UnitslnStock -= item.amount;
-                    _context.SaveChanges();
-
-                    body = body +
-                             " <tr style = \" border:1px solid black; border-collapse: collapse; \"> " +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.Product.ProductName + "</th>" +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.amount + "</th>" +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.Product.Price + "</th>" +
-                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + tong + "</th>" +
-                             " </tr> ";
-                }
-
-                body = body +
-                   " </table> " +
-                   " <p> </p>" +
-                   " <table style = \"text-align: center;  position:relative; left:70%; width:30%; border:1px solid black; border-collapse: collapse; \" > " +
-                        " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
-                        "     <th style = \" border:1px solid black; border-collapse: collapse;\" > Thành tiền </th> " +
-                         "    <th style = \" border:1px solid black;\" > " + total?.ToString("#,##0 VNĐ") + " </th>" +
-                         " </tr> " +
-                         " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
-                          "   <th style = \" border:1px solid black; border-collapse: collapse; \" > Phí giao hàng </th> " +
-                           "  <th style = \" border:1px solid black; \" >" + ship.ToString("#,##0 VNĐ") + "</th> " +
-                          " </tr> " +
-                          " <tr style = \" border:1px solid black;border-collapse: collapse; background-color: #ff9100;color: white;line-height: 20px; \" > " +
-                            "   <th style = \" border:1px solid black; border-collapse: collapse;\" > Tổng tiền </th> " +
-                             "  <th style = \" border:1px solid black;\" >" + hd.Total?.ToString("#,##0 VNĐ") + " </th> " +
-                          " </tr> " +
-                   " </table> " +
-                   " <p> Chúc bạn luôn có những trải nghiệm tuyệt vời khi mua sắm tại TTOD Trading C0., Limited! </p>" +
-                   " </div> " +
-                   " </div>";
 
 
-                await _sendMail.SendEmailAsync(email, subject, body);
 
-                ClearCart();
-                RedirectToAction(nameof(Index));
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> CheckOutAsync([FromForm] string hoten, [FromForm] string diachi, [FromForm] string sdt, [FromForm] string email)
+        //{
+        //    Console.WriteLine("vô hàm thử");
+        //    Console.WriteLine("{0}", hoten);
+        //    Console.WriteLine("{0}", diachi);
+        //    Console.WriteLine("{0}", sdt);
+        //    Console.WriteLine("{0}", email);
 
-            return Redirect("/Home/Index");
-        }
+        //    //Xử lý khi đặt hàng
+        //    var cart = GetCartItems();
+        //    ViewData["email"] = email;
+        //    ViewData["address"] = diachi;
+        //    ViewData["phone"] = sdt;
+        //    ViewData["cart"] = cart;
+
+        //    foreach (var item in cart)
+        //    {
+        //        Console.WriteLine("{0}", item.amount);
+        //    }
+
+        //    var id = from hoadon in _context.Orders
+        //             orderby hoadon.OrderId descending
+        //             select hoadon.OrderId;
+        //    int temp;
+        //    if (id.Count() == 0)
+        //    {
+        //        temp = 1;
+        //    }
+        //    else
+        //    {
+        //        temp = id.First();
+        //        temp++;
+        //    }
+        //    Console.WriteLine("{0}", temp);
+        //    if (!string.IsNullOrEmpty(email))
+        //    {
+        //        Order hd = new Order();
+        //        long? total = 0;
+        //        hd.OrderId = temp;
+        //        hd.FullName = hoten;
+        //        hd.Address = diachi;
+        //        hd.Phone = sdt;
+        //        hd.OrderDate = DateTime.Now;
+        //        var user = await GetCurrentUser();
+        //        hd.UserId = user.Id;
+
+        //        foreach (var item in cart)
+        //        {
+        //            total += item.Product.Price * item.amount;
+        //        }
+
+        //        long ship;
+        //        if (total > 500000)
+        //        {
+        //            hd.Total = total;
+        //             ship = 0;
+        //        }
+        //        else
+        //        {
+        //            hd.Total = total + 20000;
+        //            ship = 20000;
+        //        }
+
+
+        //        hd.TransactStatusId = 1; // chờ xử lý
+
+        //        _context.Orders.Add(hd);
+        //        _context.SaveChanges();
+
+        //        int lastID = hd.OrderId;
+
+
+        //        // gửi mail thử
+        //        string subject = "ĐƠN ĐẶT HÀNG";
+        //        string body =  " <p> Xin chào" + hoten + " </p> " +
+        //                       " <br></br> <div style=\" width: 700px; \">" +
+        //                       " <br></br> " +
+        //                       " <p> TTOD đã nhận được thông tin đặt hàng của bạn với mã đơn hàng: " + hd.OrderId + "</p>" +
+        //                       " <p> Vào ngày: " + hd.OrderDate + "</p>" +
+        //                       " <div style =\"width: 95%; padding: 10px;\" > " +
+        //                       " <h4 style = \"text-align: center;\" > THÔNG TIN ĐƠN HÀNG - DÀNH CHO NGƯỜI MUA </h4>" +
+        //                       " <p> Mã đơn hàng: " + hd.OrderId + " </p>" +
+        //                       " <p> Ngày đặt hàng: " + hd.OrderDate + "</p>" +
+        //                       " <p> Địa chỉ nhận hàng:  " + diachi + "</p>" +
+
+        //                       " <h4 style = \"text-align: center;\" > CHI TIẾT ĐƠN HÀNG </h4> " +
+        //                       "<table  style=\"width: 100%; border: 1px solid black; border-collapse: collapse; \"> " +
+        //                             " <tr style = \" border:1px solid black; border-collapse: collapse;background-color: #fff200;color: #5f5f5f;\" > " +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;min-width:150px;\" > Sản phẩm </th>" +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;min-width:70px;\" > Số lượng </th> " +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Đơn giá </th> " +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Số tiền </th> " +
+        //                             " </tr> ";
+        //        foreach (var item in cart)
+        //        {
+        //            Orderdetail ct = new Orderdetail();
+        //            ct.OrderId = lastID;
+        //            ct.ProductId = item.Product.ProductId;
+        //            ct.Quantity = item.amount;
+        //            long? tong = item.amount * item.Product.Price;
+        //            _context.Add(ct);
+        //            _context.SaveChanges();
+
+        //            // Cập nhật lại số lượng sản phẩm
+        //            Product sp = _context.Products.Where(sp => sp.ProductId == item.Product.ProductId).First();
+        //            sp.UnitslnStock -= item.amount;
+        //            _context.SaveChanges();
+
+        //            body = body +
+        //                     " <tr style = \" border:1px solid black; border-collapse: collapse; \"> " +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.Product.ProductName + "</th>" +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.amount + "</th>" +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.Product.Price + "</th>" +
+        //                             " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + tong + "</th>" +
+        //                     " </tr> ";
+        //        }
+
+        //        body = body +
+        //           " </table> " +
+        //           " <p> </p>" +
+        //           " <table style = \"text-align: center;  position:relative; left:70%; width:30%; border:1px solid black; border-collapse: collapse; \" > " +
+        //                " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
+        //                "     <th style = \" border:1px solid black; border-collapse: collapse;\" > Thành tiền </th> " +
+        //                 "    <th style = \" border:1px solid black;\" > " + total?.ToString("#,##0 VNĐ") + " </th>" +
+        //                 " </tr> " +
+        //                 " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
+        //                  "   <th style = \" border:1px solid black; border-collapse: collapse; \" > Phí giao hàng </th> " +
+        //                   "  <th style = \" border:1px solid black; \" >" + ship.ToString("#,##0 VNĐ") + "</th> " +
+        //                  " </tr> " +
+        //                  " <tr style = \" border:1px solid black;border-collapse: collapse; background-color: #ff9100;color: white;line-height: 20px; \" > " +
+        //                    "   <th style = \" border:1px solid black; border-collapse: collapse;\" > Tổng tiền </th> " +
+        //                     "  <th style = \" border:1px solid black;\" >" + hd.Total?.ToString("#,##0 VNĐ") + " </th> " +
+        //                  " </tr> " +
+        //           " </table> " +
+        //           " <p> Chúc bạn luôn có những trải nghiệm tuyệt vời khi mua sắm tại TTOD Trading C0., Limited! </p>" +
+        //           " </div> " +
+        //           " </div>";
+
+
+        //        await _sendMail.SendEmailAsync(email, subject, body);
+
+        //        ClearCart();
+        //        RedirectToAction(nameof(Index));
+        //    }
+
+        //    return Redirect("/Home/Index");
+        //}
 
     }
 }
